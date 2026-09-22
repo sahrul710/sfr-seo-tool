@@ -1,12 +1,23 @@
 import sqlite3
+
 from flask import Flask, render_template, request, redirect
+
+from database import init_db
+
 from search_console import (
     get_search_console_summary,
     get_top_queries,
     get_top_pages
 )
 
+
 app = Flask(__name__)
+
+
+# =========================
+# SIAPKAN DATABASE
+# =========================
+init_db()
 
 
 # =========================
@@ -16,7 +27,6 @@ def get_db_connection():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
-
 
 # =========================
 # NORMALISASI TEKS
