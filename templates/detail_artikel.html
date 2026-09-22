@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{{ article["title"] }} - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">SFR <span>SEO Tool</span></div>
+
+      <nav>
+        <a href="/">🏠 Dashboard</a>
+        <a href="/analisis">🔍 Analisis SEO</a>
+        <a href="/artikel" class="active">📝 Artikel Saya</a>
+        <a href="/keyword">🎯 Keyword Tracker</a>
+        <a href="/search-console"> 📊 Search Console </a>
+        <a>🗺️ Sitemap</a>
+        <a>⚙️ Pengaturan</a>
+      </nav>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Detail Artikel</h1>
+
+          <p>Lihat dan kelola artikel SEO yang sudah tersimpan.</p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
+
+      <section class="main-card">
+        <!-- ACTION -->
+        <div class="detail-actions">
+          <a href="/artikel" class="text-link"> ← Kembali ke Artikel Saya </a>
+
+          <a href="/artikel/{{ article['id'] }}/edit" class="edit-button">
+            ✏️ Edit Artikel
+          </a>
+
+          <form
+            action="/artikel/{{ article['id'] }}/analisis-ulang"
+            method="POST"
+          >
+            <button type="submit" class="reanalyze-button">
+              🔄 Analisis Ulang SEO
+            </button>
+          </form>
+
+          <form
+            action="/artikel/{{ article['id'] }}/hapus"
+            method="POST"
+            onsubmit="return confirm('Yakin ingin menghapus artikel ini?');"
+          >
+            <button type="submit" class="delete-button">
+              🗑️ Hapus Artikel
+            </button>
+          </form>
+        </div>
+
+        <!-- TITLE -->
+        <h2 style="margin-top: 28px">{{ article["title"] }}</h2>
+
+        <!-- INFORMASI ARTIKEL -->
+        <div class="detail-info">
+          <p>
+            <strong>Keyword Utama:</strong>
+            {{ article["keyword"] }}
+          </p>
+
+          <p>
+            <strong>On-Page SEO Score:</strong>
+            {{ article["score"] }}/100
+          </p>
+
+          <p>
+            <strong>Status Artikel:</strong>
+            {{ article["content_status"] or "Draft" }}
+          </p>
+
+          <p>
+            <strong>Status Index:</strong>
+            {{ article["index_status"] or "Belum Terindeks" }}
+          </p>
+
+          <p>
+            <strong>Tanggal Dibuat:</strong>
+            {{ article["created_at"] }}
+          </p>
+        </div>
+
+        <p class="analysis-note">
+          On-Page SEO Score merupakan hasil checklist internal SFR SEO Tool dan
+          bukan skor resmi dari Google.
+        </p>
+
+        <hr />
+
+        <!-- URL PUBLIK -->
+        <h3>URL Publik</h3>
+
+        {% if article["published_url"] %}
+
+        <p class="detail-text">
+          <a
+            href="{{ article['published_url'] }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-link"
+          >
+            {{ article["published_url"] }}
+          </a>
+        </p>
+
+        {% else %}
+
+        <p class="detail-text">Belum ada URL publik.</p>
+
+        {% endif %}
+
+        <hr />
+
+        <!-- META DESCRIPTION -->
+        <h3>Meta Description</h3>
+
+        <p class="detail-text">{{ article["meta"] or "-" }}</p>
+
+        <hr />
+
+        <!-- ISI ARTIKEL -->
+        <h3>Isi Artikel</h3>
+
+        <div class="article-content">{{ article["article"] }}</div>
+      </section>
+    </main>
+  </body>
+</html>

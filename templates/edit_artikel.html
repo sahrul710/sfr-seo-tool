@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Edit Artikel - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <div class="logo">
+        SFR <span>SEO Tool</span>
+      </div>
+
+      <nav>
+        <a href="/">🏠 Dashboard</a>
+        <a href="/analisis">🔍 Analisis SEO</a>
+        <a href="/artikel" class="active">📝 Artikel Saya</a>
+        <a href="/keyword">🎯 Keyword Tracker</a>
+        <a href="/search-console"> 📊 Search Console </a>
+        <a>🗺️ Sitemap</a>
+        <a>⚙️ Pengaturan</a>
+      </nav>
+
+    </div>
+
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- HEADER -->
+      <div class="header">
+
+        <div>
+          <h1>Edit Artikel</h1>
+
+          <p>
+            Perbarui artikel, status publikasi, dan informasi indexing.
+          </p>
+        </div>
+
+        <div class="profile">
+          S
+        </div>
+
+      </div>
+
+
+      <!-- FORM -->
+      <section class="main-card">
+
+        <form method="POST">
+
+          <!-- KEYWORD -->
+          <div class="form-group">
+
+            <label>
+              Keyword Utama
+            </label>
+
+            <input
+              type="text"
+              name="keyword"
+              value="{{ article['keyword'] or '' }}"
+              required
+            />
+
+          </div>
+
+
+          <!-- TITLE -->
+          <div class="form-group">
+
+            <label>
+              Judul Artikel
+            </label>
+
+            <input
+              type="text"
+              name="title"
+              value="{{ article['title'] or '' }}"
+              required
+            />
+
+          </div>
+
+
+          <!-- META -->
+          <div class="form-group">
+
+            <label>
+              Meta Description
+            </label>
+
+            <textarea
+              name="meta"
+              rows="4"
+              placeholder="Masukkan meta description artikel"
+            >{{ article['meta'] or '' }}</textarea>
+
+          </div>
+
+
+          <!-- ARTICLE -->
+          <div class="form-group">
+
+            <label>
+              Isi Artikel
+            </label>
+
+            <textarea
+              name="article"
+              rows="15"
+              required
+            >{{ article['article'] or '' }}</textarea>
+
+          </div>
+
+
+          <!-- STATUS ARTIKEL -->
+          <div class="form-group">
+
+            <label>
+              Status Artikel
+            </label>
+
+            <select name="content_status">
+
+              <option
+                value="Draft"
+                {% if article['content_status'] == 'Draft' %}selected{% endif %}
+              >
+                Draft
+              </option>
+
+              <option
+                value="Siap Publish"
+                {% if article['content_status'] == 'Siap Publish' %}selected{% endif %}
+              >
+                Siap Publish
+              </option>
+
+              <option
+                value="Published"
+                {% if article['content_status'] == 'Published' %}selected{% endif %}
+              >
+                Published
+              </option>
+
+            </select>
+
+            <p class="analysis-note">
+              Gunakan Published jika artikel sudah benar-benar diterbitkan.
+            </p>
+
+          </div>
+
+
+          <!-- URL PUBLIK -->
+          <div class="form-group">
+
+            <label>
+              URL Publik
+            </label>
+
+            <input
+              type="url"
+              name="published_url"
+              value="{{ article['published_url'] or '' }}"
+              placeholder="https://website.com/artikel"
+            />
+
+            <p class="analysis-note">
+              Isi URL setelah artikel dipublikasikan di Blogger atau website.
+            </p>
+
+          </div>
+
+
+          <!-- STATUS INDEX -->
+          <div class="form-group">
+
+            <label>
+              Status Index Google
+            </label>
+
+            <select name="index_status">
+
+              <option
+                value="Belum Terindeks"
+                {% if article['index_status'] == 'Belum Terindeks' %}selected{% endif %}
+              >
+                Belum Terindeks
+              </option>
+
+              <option
+                value="Indexed"
+                {% if article['index_status'] == 'Indexed' %}selected{% endif %}
+              >
+                Indexed
+              </option>
+
+            </select>
+
+            <p class="analysis-note">
+              Ubah menjadi Indexed setelah URL sudah terdeteksi di Google.
+            </p>
+
+          </div>
+
+
+          <!-- ACTION -->
+          <div class="edit-actions">
+
+            <button type="submit">
+              💾 Simpan Perubahan
+            </button>
+
+            <a
+              href="/artikel/{{ article['id'] }}"
+              class="text-link"
+            >
+              Batal
+            </a>
+
+          </div>
+
+        </form>
+
+      </section>
+
+    </main>
+
+  </body>
+</html>

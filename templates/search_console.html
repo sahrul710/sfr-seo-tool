@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Search Console - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">SFR <span>SEO Tool</span></div>
+
+      <nav>
+        <a href="/"> 🏠 Dashboard </a>
+
+        <a href="/analisis"> 🔍 Analisis SEO </a>
+
+        <a href="/artikel"> 📝 Artikel Saya </a>
+
+        <a href="/keyword"> 🎯 Keyword Tracker </a>
+
+        <a href="/search-console" class="active"> 📊 Search Console </a>
+
+        <a> 🗺️ Sitemap </a>
+
+        <a> ⚙️ Pengaturan </a>
+      </nav>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Google Search Console</h1>
+
+          <p>Pantau performa website berdasarkan data Google Search Console.</p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
+
+      <!-- ERROR MESSAGE -->
+      {% if error %}
+
+      <section
+        class="main-card"
+        style="margin-bottom: 25px; border-color: #fecaca; background: #fff7f7"
+      >
+        <p style="color: #b91c1c; font-weight: bold; margin: 0">
+          ⚠️ {{ error }}
+        </p>
+      </section>
+
+      {% endif %}
+
+      <!-- WEBSITE -->
+      <section class="main-card" style="margin-bottom: 25px">
+        <div class="card-header">
+          <div>
+            <h2>Website Terhubung</h2>
+
+            <p>
+              Data berikut diambil langsung melalui Google Search Console API.
+            </p>
+          </div>
+        </div>
+
+        <div class="detail-info">
+          <p>
+            <strong>Website:</strong>
+            {{ data.site_url }}
+          </p>
+
+          <p>
+            <strong>Periode:</strong>
+            {{ data.start_date }} sampai {{ data.end_date }}
+          </p>
+        </div>
+      </section>
+
+      <!-- STATISTIK -->
+      <div class="stats">
+        <div class="card">
+          <p>Clicks</p>
+
+          <h2>{{ data.clicks }}</h2>
+        </div>
+
+        <div class="card">
+          <p>Impressions</p>
+
+          <h2>{{ data.impressions }}</h2>
+        </div>
+
+        <div class="card">
+          <p>CTR</p>
+
+          <h2>{{ data.ctr }}%</h2>
+        </div>
+
+        <div class="card">
+          <p>Average Position</p>
+
+          <h2>{{ data.position }}</h2>
+        </div>
+      </div>
+
+      <!-- QUERY PENCARIAN -->
+      <section class="main-card" style="margin-bottom: 25px">
+        <div class="card-header">
+          <div>
+            <h2>Query Pencarian Teratas</h2>
+
+            <p>Keyword yang menampilkan website di hasil pencarian Google.</p>
+          </div>
+        </div>
+
+        {% if queries %}
+
+        <div class="article-table" style="margin-top: 20px">
+          <table>
+            <thead>
+              <tr>
+                <th>Query</th>
+                <th>Clicks</th>
+                <th>Impressions</th>
+                <th>CTR</th>
+                <th>Position</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for item in queries %}
+
+              <tr>
+                <td>
+                  <strong> {{ item.query }} </strong>
+                </td>
+
+                <td>{{ item.clicks }}</td>
+
+                <td>{{ item.impressions }}</td>
+
+                <td>{{ item.ctr }}%</td>
+
+                <td>{{ item.position }}</td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% else %}
+
+        <div class="empty-chart">
+          <div class="chart-icon">🔍</div>
+
+          <h3>Belum ada data query</h3>
+
+          <p>Query dari Google Search Console akan muncul di sini.</p>
+        </div>
+
+        {% endif %}
+      </section>
+
+      <!-- HALAMAN TERATAS -->
+      <section class="main-card" style="margin-bottom: 25px">
+        <div class="card-header">
+          <div>
+            <h2>Halaman Teratas</h2>
+
+            <p>
+              Halaman website yang tampil dan mendapatkan performa dari Google
+              Search.
+            </p>
+          </div>
+        </div>
+
+        {% if pages %}
+
+        <div class="article-table" style="margin-top: 20px">
+          <table>
+            <thead>
+              <tr>
+                <th>Halaman</th>
+                <th>Clicks</th>
+                <th>Impressions</th>
+                <th>CTR</th>
+                <th>Position</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for item in pages %}
+
+              <tr>
+                <td>
+                  <a href="{{ item.page }}" target="_blank" class="public-link">
+                    {{ item.page }}
+                  </a>
+                </td>
+
+                <td>{{ item.clicks }}</td>
+
+                <td>{{ item.impressions }}</td>
+
+                <td>{{ item.ctr }}%</td>
+
+                <td>{{ item.position }}</td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% else %}
+
+        <div class="empty-chart">
+          <div class="chart-icon">📄</div>
+
+          <h3>Belum ada data halaman</h3>
+
+          <p>
+            Halaman yang mendapatkan impressions atau clicks dari Google akan
+            muncul di sini.
+          </p>
+        </div>
+
+        {% endif %}
+      </section>
+
+      <!-- PENJELASAN -->
+      <section class="main-card">
+        <div class="card-header">
+          <div>
+            <h2>Ringkasan Performa</h2>
+
+            <p>
+              Data ini berasal dari performa organik website di Google Search.
+            </p>
+          </div>
+        </div>
+
+        <div class="detail-info">
+          <p>
+            <strong>Clicks:</strong>
+            jumlah klik yang masuk dari hasil pencarian Google.
+          </p>
+
+          <p>
+            <strong>Impressions:</strong>
+            jumlah kemunculan halaman di hasil pencarian.
+          </p>
+
+          <p>
+            <strong>CTR:</strong>
+            persentase impressions yang menghasilkan klik.
+          </p>
+
+          <p>
+            <strong>Average Position:</strong>
+            rata-rata posisi halaman di hasil pencarian Google.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{{ keyword["keyword"] }} - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">SFR <span>SEO Tool</span></div>
+
+      <nav>
+        <a href="/">🏠 Dashboard</a>
+        <a href="/analisis">🔍 Analisis SEO</a>
+        <a href="/artikel">📝 Artikel Saya</a>
+        <a href="/keyword" class="active">🎯 Keyword Tracker</a>
+        <a href="/search-console"> 📊 Search Console </a>
+        <a>🗺️ Sitemap</a>
+        <a>⚙️ Pengaturan</a>
+      </nav>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Detail Keyword</h1>
+
+          <p>
+            Lihat informasi keyword, progres SEO, dan artikel yang terhubung.
+          </p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
+
+      <!-- DETAIL KEYWORD -->
+      <section class="main-card">
+        <!-- ACTION -->
+        <div class="detail-actions">
+          <a href="/keyword" class="text-link">
+            ← Kembali ke Keyword Tracker
+          </a>
+
+          <a href="/keyword/{{ keyword['id'] }}/edit" class="edit-button">
+            ✏️ Edit Keyword
+          </a>
+
+          <form
+            action="/keyword/{{ keyword['id'] }}/hapus"
+            method="POST"
+            onsubmit="return confirm('Yakin ingin menghapus keyword ini?');"
+          >
+            <button type="submit" class="delete-button">
+              🗑️ Hapus Keyword
+            </button>
+          </form>
+        </div>
+
+        <!-- KEYWORD -->
+        <h2 style="margin-top: 25px">{{ keyword["keyword"] }}</h2>
+
+        <!-- INFO -->
+        <div class="detail-info">
+          <p>
+            <strong>Search Intent:</strong>
+            {{ keyword["intent"] }}
+          </p>
+
+          <p>
+            <strong>Sumber Riset:</strong>
+            {{ keyword["source"] }}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            {{ keyword["status"] }}
+          </p>
+
+          <p>
+            <strong>Status Index:</strong>
+            {{ keyword["index_status"] }}
+          </p>
+
+          <p>
+            <strong>Tanggal Dibuat:</strong>
+            {{ keyword["created_at"] }}
+          </p>
+        </div>
+
+        <hr />
+
+        <!-- TARGET ARTIKEL -->
+        <h3>Target Artikel</h3>
+
+        <p class="detail-text">{{ keyword["target_article"] or "-" }}</p>
+
+        <!-- TARGET URL -->
+        <h3>Target URL</h3>
+
+        <p class="detail-text">
+          {% if keyword["target_url"] %}
+
+          <a
+            href="{{ keyword['target_url'] }}"
+            target="_blank"
+            class="text-link"
+          >
+            {{ keyword["target_url"] }}
+          </a>
+
+          {% else %} - {% endif %}
+        </p>
+
+        <!-- CATATAN -->
+        <h3>Catatan Riset</h3>
+
+        <p class="detail-text">{{ keyword["notes"] or "-" }}</p>
+      </section>
+
+      <!-- ARTIKEL TERHUBUNG -->
+      <section class="main-card linked-articles-section">
+        <div class="card-header">
+          <div>
+            <h2>Artikel Terhubung</h2>
+
+            <p>
+              Artikel yang dibuat menggunakan keyword ini dari Keyword Tracker.
+            </p>
+          </div>
+        </div>
+
+        {% if linked_articles %}
+
+        <div class="article-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Judul Artikel</th>
+                <th>Keyword</th>
+                <th>On-Page SEO Score</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for article in linked_articles %}
+
+              <tr>
+                <td>
+                  <a
+                    href="/artikel/{{ article['id'] }}"
+                    class="article-title-link"
+                  >
+                    {{ article["title"] }}
+                  </a>
+                </td>
+
+                <td>{{ article["keyword"] }}</td>
+
+                <td>{{ article["score"] }}/100</td>
+
+                <td>{{ article["created_at"] }}</td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% else %}
+
+        <div class="empty-chart">
+          <div class="chart-icon">📝</div>
+
+          <h3>Belum ada artikel terhubung</h3>
+
+          <p>Pilih keyword ini melalui Analisis SEO lalu simpan artikelnya.</p>
+        </div>
+
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

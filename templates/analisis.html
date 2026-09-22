@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Analisis On-Page - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+    <div class="sidebar">
+
+      <div class="logo">
+        SFR <span>SEO Tool</span>
+      </div>
+
+      <nav>
+        <a href="/">🏠 Dashboard</a>
+
+        <a href="/analisis" class="active">
+          🔍 Analisis SEO
+        </a>
+
+        <a href="/artikel">
+          📝 Artikel Saya
+        </a>
+
+        <a href="/keyword">
+          🎯 Keyword Tracker
+        </a>
+
+        <a href="/search-console">
+          📊 Search Console
+        </a>
+
+        <a>
+          🗺️ Sitemap
+        </a>
+
+        <a>
+          ⚙️ Pengaturan
+        </a>
+      </nav>
+
+    </div>
+
+
+    <!-- =========================
+         CONTENT
+    ========================== -->
+    <main class="content">
+
+
+      <!-- HEADER -->
+      <div class="header">
+
+        <div>
+
+          <h1>
+            Analisis On-Page SEO
+          </h1>
+
+          <p>
+            Gunakan keyword hasil riset dan periksa elemen on-page
+            sebelum artikel dipublikasikan.
+          </p>
+
+        </div>
+
+        <div class="profile">
+          S
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           FORM ANALISIS
+      ========================== -->
+      <section class="main-card">
+
+        <form method="POST">
+
+
+          <!-- KEYWORD TRACKER -->
+          <div class="form-group">
+
+            <label>
+              Pilih dari Keyword Tracker
+            </label>
+
+            <select id="keywordTracker">
+
+              <option value="">
+                -- Pilih keyword tersimpan --
+              </option>
+
+              {% for item in keywords %}
+
+              <option
+                value="{{ item['id'] }}"
+                data-keyword="{{ item['keyword'] }}"
+                {% if keyword_id|string == item['id']|string %}
+                  selected
+                {% endif %}
+              >
+                {{ item["keyword"] }} — {{ item["intent"] }}
+              </option>
+
+              {% endfor %}
+
+            </select>
+
+            <p class="analysis-note">
+              Pilih keyword yang sebelumnya sudah disimpan melalui
+              Keyword Tracker.
+            </p>
+
+          </div>
+
+
+          <!-- KEYWORD ID -->
+          <input
+            type="hidden"
+            id="keywordIdInput"
+            name="keyword_id"
+            value="{{ keyword_id }}"
+          />
+
+
+          <!-- KEYWORD UTAMA -->
+          <div class="form-group">
+
+            <label>
+              Keyword Utama
+            </label>
+
+            <input
+              type="text"
+              id="keywordInput"
+              name="keyword"
+              placeholder="Contoh: kebakaran hutan kalimantan"
+              value="{{ keyword }}"
+              required
+            />
+
+            <p class="analysis-note">
+              Kamu juga tetap bisa memasukkan keyword secara manual.
+            </p>
+
+          </div>
+
+
+          <!-- JUDUL -->
+          <div class="form-group">
+
+            <label>
+              Judul Artikel
+            </label>
+
+            <input
+              type="text"
+              id="titleInput"
+              name="title"
+              placeholder="Masukkan judul artikel"
+              value="{{ title }}"
+              required
+            />
+
+            <p
+              class="field-counter"
+              id="titleCounter"
+            >
+              0 karakter
+            </p>
+
+          </div>
+
+
+          <!-- META DESCRIPTION -->
+          <div class="form-group">
+
+            <label>
+              Meta Description
+            </label>
+
+            <textarea
+              id="metaInput"
+              name="meta"
+              rows="4"
+              placeholder="Masukkan meta description artikel"
+            >{{ meta }}</textarea>
+
+            <p
+              class="field-counter"
+              id="metaCounter"
+            >
+              0 karakter
+            </p>
+
+          </div>
+
+
+          <!-- ISI ARTIKEL -->
+          <div class="form-group">
+
+            <label>
+              Isi Artikel
+            </label>
+
+            <textarea
+              id="articleInput"
+              name="article"
+              rows="15"
+              placeholder="Tempel draft artikel SEO kamu di sini..."
+              required
+            >{{ article }}</textarea>
+
+
+            <div class="content-counter">
+
+              <span id="wordCounter">
+                0 kata
+              </span>
+
+              <span id="keywordCounter">
+                Keyword muncul 0 kali
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <button type="submit">
+            🔍 Analisis Sekarang
+          </button>
+
+        </form>
+
+      </section>
+
+
+      <!-- =========================
+           HASIL ANALISIS
+      ========================== -->
+      {% if results %}
+
+      <section class="main-card result-box">
+
+        <div class="analysis-header">
+
+          <div>
+
+            <h2>
+              Hasil Analisis On-Page
+            </h2>
+
+            <p class="analysis-note">
+              Skor ini berasal dari checklist internal SFR SEO Tool
+              dan bukan skor resmi Google.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- SCORE -->
+        <div class="score">
+          {{ score }}/100
+        </div>
+
+        <p class="score-label">
+          On-Page SEO Score
+        </p>
+
+
+        <!-- HASIL CHECK -->
+        <div class="analysis-results">
+
+          {% for result in results %}
+
+          <div class="result-item">
+
+            {% if result.status == "good" %}
+
+            <span class="good">
+              ✅
+            </span>
+
+            {% else %}
+
+            <span class="warning">
+              ⚠️
+            </span>
+
+            {% endif %}
+
+            <span>
+              {{ result.text }}
+            </span>
+
+          </div>
+
+          {% endfor %}
+
+        </div>
+
+
+        <!-- =========================
+             SIMPAN ARTIKEL
+        ========================== -->
+        <div class="save-section">
+
+          <form
+            action="/simpan"
+            method="POST"
+          >
+
+            <!-- RELASI KEYWORD -->
+            <input
+              type="hidden"
+              name="keyword_id"
+              value="{{ keyword_id }}"
+            />
+
+
+            <input
+              type="hidden"
+              name="keyword"
+              value="{{ keyword }}"
+            />
+
+
+            <input
+              type="hidden"
+              name="title"
+              value="{{ title }}"
+            />
+
+
+            <input
+              type="hidden"
+              name="meta"
+              value="{{ meta }}"
+            />
+
+
+            <textarea
+              name="article"
+              style="display: none"
+            >{{ article }}</textarea>
+
+
+            <button type="submit">
+              💾 Simpan Artikel
+            </button>
+
+          </form>
+
+        </div>
+
+      </section>
+
+      {% endif %}
+
+
+    </main>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+    <script>
+
+      /* =========================
+         ELEMENT
+      ========================== */
+
+      const keywordTracker =
+        document.getElementById("keywordTracker");
+
+      const keywordInput =
+        document.getElementById("keywordInput");
+
+      const keywordIdInput =
+        document.getElementById("keywordIdInput");
+
+      const titleInput =
+        document.getElementById("titleInput");
+
+      const metaInput =
+        document.getElementById("metaInput");
+
+      const articleInput =
+        document.getElementById("articleInput");
+
+      const titleCounter =
+        document.getElementById("titleCounter");
+
+      const metaCounter =
+        document.getElementById("metaCounter");
+
+      const wordCounter =
+        document.getElementById("wordCounter");
+
+      const keywordCounter =
+        document.getElementById("keywordCounter");
+
+
+
+      /* =========================
+         HITUNG JUMLAH KATA
+      ========================== */
+
+      function countWords(text) {
+
+        const cleanText =
+          text.trim();
+
+        if (cleanText === "") {
+          return 0;
+        }
+
+        return cleanText
+          .split(/\s+/)
+          .length;
+
+      }
+
+
+
+      /* =========================
+         LIVE SEO COUNTER
+      ========================== */
+
+      function updateSeoCounters() {
+
+
+        /* -------------------------
+           JUDUL
+        ------------------------- */
+
+        const titleLength =
+          titleInput.value.trim().length;
+
+        titleCounter.textContent =
+          titleLength +
+          " karakter • target internal 30–60";
+
+        titleCounter.classList.remove(
+          "counter-good",
+          "counter-warning"
+        );
+
+        if (
+          titleLength >= 30 &&
+          titleLength <= 60
+        ) {
+
+          titleCounter.classList.add(
+            "counter-good"
+          );
+
+        } else {
+
+          titleCounter.classList.add(
+            "counter-warning"
+          );
+
+        }
+
+
+
+        /* -------------------------
+           META DESCRIPTION
+        ------------------------- */
+
+        const metaLength =
+          metaInput.value.trim().length;
+
+        metaCounter.textContent =
+          metaLength +
+          " karakter • target internal 120–160";
+
+        metaCounter.classList.remove(
+          "counter-good",
+          "counter-warning"
+        );
+
+        if (
+          metaLength >= 120 &&
+          metaLength <= 160
+        ) {
+
+          metaCounter.classList.add(
+            "counter-good"
+          );
+
+        } else {
+
+          metaCounter.classList.add(
+            "counter-warning"
+          );
+
+        }
+
+
+
+        /* -------------------------
+           JUMLAH KATA
+        ------------------------- */
+
+        const articleText =
+          articleInput.value;
+
+        const totalWords =
+          countWords(articleText);
+
+        wordCounter.textContent =
+          totalWords +
+          " kata";
+
+        wordCounter.classList.remove(
+          "counter-good",
+          "counter-warning"
+        );
+
+        if (totalWords >= 500) {
+
+          wordCounter.classList.add(
+            "counter-good"
+          );
+
+        } else {
+
+          wordCounter.classList.add(
+            "counter-warning"
+          );
+
+        }
+
+
+
+        /* -------------------------
+           JUMLAH KEYWORD
+        ------------------------- */
+
+        const keyword =
+          keywordInput.value
+            .trim()
+            .toLowerCase();
+
+        const articleLower =
+          articleText
+            .toLowerCase();
+
+        let keywordCount = 0;
+
+
+        if (keyword !== "") {
+
+          keywordCount =
+            articleLower
+              .split(keyword)
+              .length - 1;
+
+        }
+
+
+        keywordCounter.textContent =
+          "Keyword muncul " +
+          keywordCount +
+          " kali";
+
+
+        keywordCounter.classList.remove(
+          "counter-good",
+          "counter-warning"
+        );
+
+
+        if (keywordCount > 0) {
+
+          keywordCounter.classList.add(
+            "counter-good"
+          );
+
+        } else {
+
+          keywordCounter.classList.add(
+            "counter-warning"
+          );
+
+        }
+
+      }
+
+
+
+      /* =========================
+         PILIH KEYWORD TRACKER
+      ========================== */
+
+      keywordTracker.addEventListener(
+        "change",
+        function () {
+
+          const selectedOption =
+            this.options[
+              this.selectedIndex
+            ];
+
+
+          if (this.value !== "") {
+
+            keywordIdInput.value =
+              this.value;
+
+            keywordInput.value =
+              selectedOption.dataset.keyword;
+
+          } else {
+
+            keywordIdInput.value = "";
+
+          }
+
+
+          updateSeoCounters();
+
+        }
+      );
+
+
+
+      /* =========================
+         KEYWORD MANUAL
+      ========================== */
+
+      keywordInput.addEventListener(
+        "input",
+        function () {
+
+          if (
+            keywordTracker.value !== ""
+          ) {
+
+            const selectedOption =
+              keywordTracker.options[
+                keywordTracker.selectedIndex
+              ];
+
+
+            if (
+              this.value !==
+              selectedOption.dataset.keyword
+            ) {
+
+              keywordTracker.value = "";
+
+              keywordIdInput.value = "";
+
+            }
+
+          }
+
+
+          updateSeoCounters();
+
+        }
+      );
+
+
+
+      /* =========================
+         LIVE UPDATE
+      ========================== */
+
+      titleInput.addEventListener(
+        "input",
+        updateSeoCounters
+      );
+
+
+      metaInput.addEventListener(
+        "input",
+        updateSeoCounters
+      );
+
+
+      articleInput.addEventListener(
+        "input",
+        updateSeoCounters
+      );
+
+
+
+      /* =========================
+         SAAT HALAMAN DIBUKA
+      ========================== */
+
+      updateSeoCounters();
+
+    </script>
+
+
+  </body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Artikel Saya - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">SFR <span>SEO Tool</span></div>
+
+      <nav>
+        <a href="/">🏠 Dashboard</a>
+        <a href="/analisis">🔍 Analisis SEO</a>
+
+        <a href="/artikel" class="active"> 📝 Artikel Saya </a>
+
+        <a href="/keyword"> 🎯 Keyword Tracker </a>
+
+        <a href="/search-console"> 📊 Search Console </a>
+        <a>🗺️ Sitemap</a>
+        <a>⚙️ Pengaturan</a>
+      </nav>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Artikel Saya</h1>
+
+          <p>Kelola draft, publikasi, indexing, dan optimasi artikel SEO.</p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
+
+      <!-- ARTIKEL -->
+      <section class="main-card">
+        {% if articles %}
+
+        <div class="article-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Judul</th>
+                <th>Keyword</th>
+                <th>On-Page SEO Score</th>
+                <th>Status</th>
+                <th>Index</th>
+                <th>URL Publik</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for article in articles %}
+
+              <tr>
+                <!-- JUDUL -->
+                <td>
+                  <a
+                    href="/artikel/{{ article['id'] }}"
+                    class="article-title-link"
+                  >
+                    {{ article["title"] }}
+                  </a>
+                </td>
+
+                <!-- KEYWORD -->
+                <td>{{ article["keyword"] }}</td>
+
+                <!-- SCORE -->
+                <td>{{ article["score"] }}/100</td>
+
+                <!-- STATUS ARTIKEL -->
+                <td>
+                  {% if article["content_status"] == "Published" %}
+
+                  <span class="status-badge status-published"> Published </span>
+
+                  {% elif article["content_status"] == "Siap Publish" %}
+
+                  <span class="status-badge status-ready"> Siap Publish </span>
+
+                  {% else %}
+
+                  <span class="status-badge status-draft"> Draft </span>
+
+                  {% endif %}
+                </td>
+
+                <!-- STATUS INDEX -->
+                <td>
+                  {% if article["index_status"] == "Indexed" %}
+
+                  <span class="status-badge status-indexed"> Indexed </span>
+
+                  {% else %}
+
+                  <span class="status-badge status-not-indexed">
+                    Belum Terindeks
+                  </span>
+
+                  {% endif %}
+                </td>
+
+                <!-- URL PUBLIK -->
+                <td>
+                  {% if article["published_url"] %}
+
+                  <a
+                    href="{{ article['published_url'] }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="public-link"
+                  >
+                    Buka ↗
+                  </a>
+
+                  {% else %}
+
+                  <span class="empty-value"> - </span>
+
+                  {% endif %}
+                </td>
+
+                <!-- TANGGAL -->
+                <td>{{ article["created_at"] }}</td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="empty-chart">
+          <div class="chart-icon">📝</div>
+
+          <h3>Belum ada artikel</h3>
+
+          <p>
+            Analisis artikel terlebih dahulu kemudian simpan ke Artikel Saya.
+          </p>
+
+          <div style="margin-top: 20px">
+            <a href="/analisis" class="edit-button"> Buat Artikel </a>
+          </div>
+        </div>
+
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

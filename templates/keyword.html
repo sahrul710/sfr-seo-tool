@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Keyword Tracker - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">SFR <span>SEO Tool</span></div>
+
+      <nav>
+        <a href="/"> 🏠 Dashboard </a>
+
+        <a href="/analisis"> 🔍 Analisis SEO </a>
+
+        <a href="/artikel"> 📝 Artikel Saya </a>
+
+        <a href="/keyword" class="active"> 🎯 Keyword Tracker </a>
+
+        <a href="/search-console"> 📊 Search Console </a>
+
+        <a> 🗺️ Sitemap </a>
+
+        <a> ⚙️ Pengaturan </a>
+      </nav>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Keyword Tracker</h1>
+
+          <p>
+            Simpan dan kelola keyword hasil riset untuk kebutuhan artikel SEO.
+          </p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
+
+      <!-- FORM TAMBAH KEYWORD -->
+      <section class="main-card">
+        <div class="card-header">
+          <div>
+            <h2>Tambah Keyword</h2>
+
+            <p>Masukkan keyword berdasarkan hasil riset dari sumber nyata.</p>
+          </div>
+        </div>
+
+        <form method="POST" class="keyword-form">
+          <!-- KEYWORD -->
+          <div class="form-group">
+            <label> Keyword </label>
+
+            <input
+              type="text"
+              name="keyword"
+              placeholder="Contoh: kebakaran hutan kalimantan"
+              required
+            />
+          </div>
+
+          <!-- SEARCH INTENT -->
+          <div class="form-group">
+            <label> Search Intent </label>
+
+            <select name="intent">
+              <option value="Informational">Informational</option>
+
+              <option value="Commercial Investigation">
+                Commercial Investigation
+              </option>
+
+              <option value="Transactional">Transactional</option>
+
+              <option value="Navigational">Navigational</option>
+            </select>
+          </div>
+
+          <!-- SUMBER RISET -->
+          <div class="form-group">
+            <label> Sumber Riset </label>
+
+            <select name="source">
+              <option value="Google Trends">Google Trends</option>
+
+              <option value="Google Autocomplete">Google Autocomplete</option>
+
+              <option value="Ahrefs">Ahrefs</option>
+
+              <option value="Google Search Console">
+                Google Search Console
+              </option>
+
+              <option value="Manual">Manual</option>
+            </select>
+          </div>
+
+          <!-- STATUS -->
+          <div class="form-group">
+            <label> Status </label>
+
+            <select name="status">
+              <option value="Riset">Riset</option>
+
+              <option value="Draft">Draft</option>
+
+              <option value="Siap Publish">Siap Publish</option>
+
+              <option value="Published">Published</option>
+
+              <option value="Indexed">Indexed</option>
+            </select>
+          </div>
+
+          <!-- TARGET ARTIKEL -->
+          <div class="form-group">
+            <label> Target Artikel </label>
+
+            <input
+              type="text"
+              name="target_article"
+              placeholder="Contoh: Kebakaran Hutan Kalimantan: Penyebab dan Dampaknya"
+            />
+          </div>
+
+          <!-- TARGET URL -->
+          <div class="form-group">
+            <label> Target URL </label>
+
+            <input
+              type="text"
+              name="target_url"
+              placeholder="https://websitekamu.com/artikel"
+            />
+          </div>
+
+          <!-- INDEX STATUS -->
+          <div class="form-group">
+            <label> Status Index </label>
+
+            <select name="index_status">
+              <option value="Belum Terindeks">Belum Terindeks</option>
+
+              <option value="Indexed">Indexed</option>
+            </select>
+          </div>
+
+          <!-- CATATAN -->
+          <div class="form-group">
+            <label> Catatan </label>
+
+            <textarea
+              name="notes"
+              rows="4"
+              placeholder="Contoh: tren meningkat dalam 7 hari terakhir."
+            ></textarea>
+          </div>
+
+          <button type="submit">💾 Simpan Keyword</button>
+        </form>
+      </section>
+
+      <!-- DAFTAR KEYWORD -->
+      <section class="main-card keyword-list-section">
+        <div class="card-header">
+          <div>
+            <h2>Daftar Keyword</h2>
+
+            <p>Keyword yang sudah kamu simpan akan muncul di sini.</p>
+          </div>
+        </div>
+
+        {% if keywords %}
+
+        <div class="article-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Intent</th>
+                <th>Sumber</th>
+                <th>Status</th>
+                <th>Index</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for item in keywords %}
+
+              <tr>
+                <td>
+                  <a
+                    href="/keyword/{{ item['id'] }}"
+                    class="article-title-link"
+                  >
+                    {{ item["keyword"] }}
+                  </a>
+                </td>
+
+                <td>{{ item["intent"] }}</td>
+
+                <td>{{ item["source"] }}</td>
+
+                <td>{{ item["status"] }}</td>
+
+                <td>{{ item["index_status"] }}</td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% else %}
+
+        <div class="empty-chart">
+          <div class="chart-icon">🎯</div>
+
+          <h3>Belum ada keyword</h3>
+
+          <p>Keyword hasil riset yang kamu simpan akan muncul di sini.</p>
+        </div>
+
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

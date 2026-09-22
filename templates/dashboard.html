@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Dashboard - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">SFR <span>SEO Tool</span></div>
+
+      <nav>
+        <a href="/" class="active">🏠 Dashboard</a>
+        <a href="/analisis">🔍 Analisis SEO</a>
+        <a href="/artikel">📝 Artikel Saya</a>
+        <a href="/keyword">🎯 Keyword Tracker</a>
+        <a href="/search-console"> 📊 Search Console </a>
+        <a>🗺️ Sitemap</a>
+        <a>⚙️ Pengaturan</a>
+      </nav>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Dashboard SEO</h1>
+
+          <p>
+            Pantau keyword, artikel, publikasi, dan progres indexing dalam satu
+            tempat.
+          </p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <section class="stats">
+        <div class="card">
+          <p>Total Artikel</p>
+          <h2>{{ total_articles }}</h2>
+        </div>
+
+        <div class="card">
+          <p>Total Keyword</p>
+          <h2>{{ total_keywords }}</h2>
+        </div>
+
+        <div class="card">
+          <p>Published</p>
+          <h2>{{ total_published }}</h2>
+        </div>
+
+        <div class="card">
+          <p>Indexed</p>
+          <h2>{{ total_indexed }}</h2>
+        </div>
+      </section>
+
+      <!-- QUICK ACTION -->
+      <section class="main-card">
+        <div class="card-header">
+          <div>
+            <h2>Workflow SEO</h2>
+
+            <p>Mulai dari riset keyword sampai artikel siap dipantau.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-actions">
+          <a href="/keyword" class="dashboard-action-card">
+            <div class="dashboard-action-icon">🎯</div>
+
+            <div>
+              <h3>Riset Keyword</h3>
+              <p>Simpan keyword hasil riset ke Keyword Tracker.</p>
+            </div>
+          </a>
+
+          <a href="/analisis" class="dashboard-action-card">
+            <div class="dashboard-action-icon">🔍</div>
+
+            <div>
+              <h3>Analisis Artikel</h3>
+              <p>Periksa elemen dasar on-page SEO sebelum publish.</p>
+            </div>
+          </a>
+
+          <a href="/artikel" class="dashboard-action-card">
+            <div class="dashboard-action-icon">📝</div>
+
+            <div>
+              <h3>Kelola Artikel</h3>
+              <p>Pantau draft, published, dan status index.</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- ARTIKEL TERBARU -->
+      <section class="main-card recent-section">
+        <div class="card-header">
+          <div>
+            <h2>Artikel Terbaru</h2>
+
+            <p>Artikel SEO yang terakhir disimpan atau dikelola.</p>
+          </div>
+
+          <a href="/artikel" class="text-link"> Lihat Semua → </a>
+        </div>
+
+        {% if recent_articles %}
+
+        <div class="article-table dashboard-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Judul</th>
+                <th>Keyword</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Index</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for article in recent_articles %}
+
+              <tr>
+                <td>
+                  <a
+                    href="/artikel/{{ article['id'] }}"
+                    class="article-title-link"
+                  >
+                    {{ article["title"] }}
+                  </a>
+                </td>
+
+                <td>{{ article["keyword"] }}</td>
+
+                <td>{{ article["score"] }}/100</td>
+
+                <td>
+                  {% if article["content_status"] == "Published" %}
+
+                  <span class="status-badge status-published"> Published </span>
+
+                  {% elif article["content_status"] == "Siap Publish" %}
+
+                  <span class="status-badge status-ready"> Siap Publish </span>
+
+                  {% else %}
+
+                  <span class="status-badge status-draft"> Draft </span>
+
+                  {% endif %}
+                </td>
+
+                <td>
+                  {% if article["index_status"] == "Indexed" %}
+
+                  <span class="status-badge status-indexed"> Indexed </span>
+
+                  {% else %}
+
+                  <span class="status-badge status-not-indexed">
+                    Belum Terindeks
+                  </span>
+
+                  {% endif %}
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% else %}
+
+        <div class="empty-chart">
+          <div class="chart-icon">📝</div>
+
+          <h3>Belum ada artikel</h3>
+
+          <p>Artikel yang kamu simpan akan muncul di Dashboard.</p>
+        </div>
+
+        {% endif %}
+      </section>
+
+      <!-- KEYWORD TERBARU -->
+      <section class="main-card recent-section">
+        <div class="card-header">
+          <div>
+            <h2>Keyword Terbaru</h2>
+
+            <p>Keyword terakhir yang tersimpan di Keyword Tracker.</p>
+          </div>
+
+          <a href="/keyword" class="text-link"> Lihat Semua → </a>
+        </div>
+
+        {% if recent_keywords %}
+
+        <div class="article-table dashboard-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Intent</th>
+                <th>Sumber</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for item in recent_keywords %}
+
+              <tr>
+                <td>
+                  <a
+                    href="/keyword/{{ item['id'] }}"
+                    class="article-title-link"
+                  >
+                    {{ item["keyword"] }}
+                  </a>
+                </td>
+
+                <td>{{ item["intent"] }}</td>
+
+                <td>{{ item["source"] }}</td>
+
+                <td>
+                  {% if item["status"] == "Published" %}
+
+                  <span class="status-badge status-published"> Published </span>
+
+                  {% elif item["status"] == "Siap Publish" %}
+
+                  <span class="status-badge status-ready"> Siap Publish </span>
+
+                  {% elif item["status"] == "Draft" %}
+
+                  <span class="status-badge status-draft"> Draft </span>
+
+                  {% else %}
+
+                  <span class="status-badge status-research"> Riset </span>
+
+                  {% endif %}
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% else %}
+
+        <div class="empty-chart">
+          <div class="chart-icon">🎯</div>
+
+          <h3>Belum ada keyword</h3>
+
+          <p>Keyword hasil riset akan muncul di Dashboard.</p>
+        </div>
+
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

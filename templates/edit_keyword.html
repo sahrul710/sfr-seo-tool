@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Keyword - SFR SEO Tool</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="logo">
+            SFR <span>SEO Tool</span>
+        </div>
+
+        <nav>
+            <a href="/">🏠 Dashboard</a>
+            <a href="/analisis">🔍 Analisis SEO</a>
+            <a href="/artikel">📝 Artikel Saya</a>
+            <a href="/keyword" class="active">🎯 Keyword Tracker</a>
+            <a href="/search-console"> 📊 Search Console </a>
+            <a>🗺️ Sitemap</a>
+            <a>⚙️ Pengaturan</a>
+        </nav>
+
+    </div>
+
+
+    <!-- CONTENT -->
+    <main class="content">
+
+        <div class="header">
+
+            <div>
+                <h1>Edit Keyword</h1>
+                <p>Perbarui data keyword dan progres konten SEO.</p>
+            </div>
+
+            <div class="profile">
+                S
+            </div>
+
+        </div>
+
+
+        <section class="main-card">
+
+            <form method="POST">
+
+                <!-- KEYWORD -->
+                <div class="form-group">
+                    <label>Keyword</label>
+
+                    <input
+                        type="text"
+                        name="keyword"
+                        value="{{ keyword['keyword'] or '' }}"
+                        required
+                    >
+                </div>
+
+
+                <!-- SEARCH INTENT -->
+                <div class="form-group">
+                    <label>Search Intent</label>
+
+                    <select name="intent">
+
+                        <option
+                            value="Informational"
+                            {% if keyword['intent'] == 'Informational' %}selected{% endif %}
+                        >
+                            Informational
+                        </option>
+
+                        <option
+                            value="Commercial Investigation"
+                            {% if keyword['intent'] == 'Commercial Investigation' %}selected{% endif %}
+                        >
+                            Commercial Investigation
+                        </option>
+
+                        <option
+                            value="Transactional"
+                            {% if keyword['intent'] == 'Transactional' %}selected{% endif %}
+                        >
+                            Transactional
+                        </option>
+
+                        <option
+                            value="Navigational"
+                            {% if keyword['intent'] == 'Navigational' %}selected{% endif %}
+                        >
+                            Navigational
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- SOURCE -->
+                <div class="form-group">
+                    <label>Sumber Riset</label>
+
+                    <select name="source">
+
+                        <option
+                            value="Google Trends"
+                            {% if keyword['source'] == 'Google Trends' %}selected{% endif %}
+                        >
+                            Google Trends
+                        </option>
+
+                        <option
+                            value="Google Autocomplete"
+                            {% if keyword['source'] == 'Google Autocomplete' %}selected{% endif %}
+                        >
+                            Google Autocomplete
+                        </option>
+
+                        <option
+                            value="Ahrefs"
+                            {% if keyword['source'] == 'Ahrefs' %}selected{% endif %}
+                        >
+                            Ahrefs
+                        </option>
+
+                        <option
+                            value="Google Search Console"
+                            {% if keyword['source'] == 'Google Search Console' %}selected{% endif %}
+                        >
+                            Google Search Console
+                        </option>
+
+                        <option
+                            value="Manual"
+                            {% if keyword['source'] == 'Manual' %}selected{% endif %}
+                        >
+                            Manual
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- STATUS -->
+                <div class="form-group">
+                    <label>Status Konten</label>
+
+                    <select name="status">
+
+                        <option
+                            value="Riset"
+                            {% if keyword['status'] == 'Riset' %}selected{% endif %}
+                        >
+                            Riset
+                        </option>
+
+                        <option
+                            value="Draft"
+                            {% if keyword['status'] == 'Draft' %}selected{% endif %}
+                        >
+                            Draft
+                        </option>
+
+                        <option
+                            value="Siap Publish"
+                            {% if keyword['status'] == 'Siap Publish' %}selected{% endif %}
+                        >
+                            Siap Publish
+                        </option>
+
+                        <option
+                            value="Published"
+                            {% if keyword['status'] == 'Published' %}selected{% endif %}
+                        >
+                            Published
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- TARGET ARTICLE -->
+                <div class="form-group">
+                    <label>Target Artikel</label>
+
+                    <input
+                        type="text"
+                        name="target_article"
+                        value="{{ keyword['target_article'] or '' }}"
+                        placeholder="Judul artikel target"
+                    >
+                </div>
+
+
+                <!-- TARGET URL -->
+                <div class="form-group">
+                    <label>Target URL</label>
+
+                    <input
+                        type="text"
+                        name="target_url"
+                        value="{{ keyword['target_url'] or '' }}"
+                        placeholder="https://website.com/artikel"
+                    >
+                </div>
+
+
+                <!-- INDEX STATUS -->
+                <div class="form-group">
+                    <label>Status Index</label>
+
+                    <select name="index_status">
+
+                        <option
+                            value="Belum Terindeks"
+                            {% if keyword['index_status'] == 'Belum Terindeks' %}selected{% endif %}
+                        >
+                            Belum Terindeks
+                        </option>
+
+                        <option
+                            value="Indexed"
+                            {% if keyword['index_status'] == 'Indexed' %}selected{% endif %}
+                        >
+                            Indexed
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- NOTES -->
+                <div class="form-group">
+                    <label>Catatan</label>
+
+                    <textarea
+                        name="notes"
+                        rows="5"
+                        placeholder="Catatan riset keyword..."
+                    >{{ keyword['notes'] or '' }}</textarea>
+                </div>
+
+
+                <!-- ACTION -->
+                <div class="edit-actions">
+
+                    <button type="submit">
+                        💾 Simpan Perubahan
+                    </button>
+
+                    <a
+                        href="/keyword/{{ keyword['id'] }}"
+                        class="text-link"
+                    >
+                        Batal
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
