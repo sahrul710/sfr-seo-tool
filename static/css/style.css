@@ -803,3 +803,277 @@ button:hover {
 .counter-warning {
   color: #d97706;
 }
+
+/* =========================
+   SITEMAP
+========================= */
+
+.sitemap-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sitemap-form label {
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.sitemap-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.sitemap-form button {
+  margin-top: 12px;
+  width: fit-content;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* =========================
+   RESPONSIVE IMPROVEMENT
+========================= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .content {
+    padding: 28px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .main-card {
+    padding: 22px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+
+    position: relative;
+
+    padding: 18px 14px;
+  }
+
+  .logo {
+    margin-bottom: 18px;
+    text-align: center;
+  }
+
+  .sidebar nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 8px;
+  }
+
+  .sidebar nav a {
+    padding: 9px 11px;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+  }
+
+  .content {
+    margin-left: 0;
+
+    padding: 18px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 14px;
+
+    margin-bottom: 22px;
+  }
+
+  .header h1 {
+    font-size: 23px;
+  }
+
+  .profile {
+    width: 36px;
+    height: 36px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .main-card {
+    padding: 18px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .dashboard-actions {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .dashboard-action-card {
+    padding: 15px;
+  }
+
+  .detail-actions,
+  .edit-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .detail-actions a,
+  .detail-actions button,
+  .edit-actions a,
+  .edit-actions button {
+    width: 100%;
+    text-align: center;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .sitemap-form button {
+    width: 100%;
+  }
+
+  .content-counter {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 6px;
+  }
+
+  .score {
+    width: 95px;
+    height: 95px;
+
+    font-size: 21px;
+  }
+
+  .article-table {
+    width: 100%;
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .article-table table {
+    min-width: 700px;
+  }
+
+  .article-table th,
+  .article-table td {
+    white-space: nowrap;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select,
+  .sitemap-form input {
+    font-size: 16px;
+  }
+
+  .empty-chart {
+    min-height: 220px;
+    padding: 22px;
+  }
+}
+
+/* HP KECIL */
+@media (max-width: 480px) {
+  .content {
+    padding: 14px;
+  }
+
+  .sidebar {
+    padding: 15px 10px;
+  }
+
+  .logo {
+    font-size: 19px;
+  }
+
+  .sidebar nav {
+    justify-content: flex-start;
+  }
+
+  .sidebar nav a {
+    width: calc(50% - 4px);
+
+    text-align: center;
+
+    padding: 10px 6px;
+
+    font-size: 11px;
+  }
+
+  .header h1 {
+    font-size: 21px;
+  }
+
+  .header p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .card h2 {
+    font-size: 24px;
+  }
+
+  .main-card {
+    padding: 15px;
+  }
+
+  .dashboard-action-icon {
+    width: 40px;
+    height: 40px;
+
+    font-size: 19px;
+  }
+
+  .article-table table {
+    min-width: 650px;
+  }
+
+  .detail-text,
+  .article-content {
+    font-size: 14px;
+  }
+}

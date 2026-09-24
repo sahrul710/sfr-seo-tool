@@ -1,4 +1,9 @@
 import sqlite3
+import urllib.request
+import urllib.parse
+import xml.etree.ElementTree as ET
+import socket
+import ipaddress
 
 from flask import Flask, render_template, request, redirect
 
@@ -1023,6 +1028,165 @@ def search_console():
         data=data,
         queries=queries,
         pages=pages,
+        error=error
+    )
+
+# =========================
+# SITEMAP
+# =========================
+@app.route("/sitemap", methods=["GET", "POST"])
+def sitemap():
+
+    sitemap_url = ""
+    article_url = ""
+
+    status = None
+    total_urls = 0
+    article_found = None
+    urls = []
+    error = None
+
+    if request.method == "POST":
+
+        sitemap_url = request.form.get(
+            "sitemap_url",
+            ""
+        ).strip()
+
+        article_url = request.form.get(
+            "article_url",
+            ""
+        ).strip()
+
+        try:
+
+            # =========================
+            # VALIDASI URL
+            # =========================
+            parsed_url = urllib.parse.urlparse(
+                sitemap_url
+            )
+
+            if parsed_url.scheme not in ["http", "https"]:
+                raise ValueError(
+                    "URL sitemap harus menggunakan http atau https."
+                )
+
+            if not parsed_url.hostname:
+                raise ValueError(
+                    "URL sitemap tidak valid."
+                )
+
+
+            # =========================
+            # CEGAH AKSES KE IP INTERNAL
+            # =========================
+            ip_address = socket.gethostbyname(
+                parsed_url.hostname
+            )
+
+            ip = ipaddress.ip_address(
+                ip_address
+            )
+
+            if (
+                ip.is_private
+                or ip.is_loopback
+                or ip.is_link_local
+                or ip.is_reserved
+                or ip.is_multicast
+            ):
+                raise ValueError(
+                    "Alamat sitemap tidak diizinkan."
+                )
+
+
+            # =========================
+            # AMBIL DATA SITEMAP
+            # =========================
+            request_sitemap = urllib.request.Request(
+                sitemap_url,
+                headers={
+                    "User-Agent": "SFR-SEO-Tool/1.0"
+                }
+            )
+
+            with urllib.request.urlopen(
+                request_sitemap,
+                timeout=10
+            ) as response:
+
+                sitemap_data = response.read()
+
+
+            # =========================
+            # BACA XML
+            # =========================
+            root = ET.fromstring(
+                sitemap_data
+            )
+
+
+            # =========================
+            # AMBIL SEMUA URL
+            # =========================
+            for element in root.iter():
+
+                if element.tag.endswith("loc"):
+
+                    if element.text:
+
+                        url = element.text.strip()
+
+                        if url:
+                            urls.append(url)
+
+
+            # Hapus URL duplikat
+            urls = list(
+                dict.fromkeys(urls)
+            )
+
+            total_urls = len(urls)
+
+            status = "success"
+
+
+            # =========================
+            # CEK URL ARTIKEL
+            # =========================
+            if article_url:
+
+                article_normal = article_url.rstrip("/")
+
+                article_found = any(
+                    url.rstrip("/") == article_normal
+                    for url in urls
+                )
+
+
+        except Exception as e:
+
+            print(
+                "Sitemap Error:",
+                e
+            )
+
+            error = (
+                "Sitemap tidak dapat dibaca. "
+                "Pastikan URL sitemap benar, "
+                "publik, dan menggunakan format XML."
+            )
+
+
+    return render_template(
+        "sitemap.html",
+        sitemap_url=sitemap_url,
+        article_url=article_url,
+        status=status,
+        total_urls=total_urls,
+        article_found=article_found,
+        urls=urls,
         error=error
     )
 
