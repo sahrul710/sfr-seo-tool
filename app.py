@@ -1,10 +1,13 @@
 import os
 import sqlite3
 import urllib.request
+import urllib.error
 import urllib.parse
 import xml.etree.ElementTree as ET
+from urllib.parse import urlparse
 import socket
 import ipaddress
+
 
 
 from flask import Flask, render_template, request, redirect, flash
@@ -382,8 +385,8 @@ def simpan_artikel():
     # =========================
     if DEMO_MODE:
         flash(
-            "⚠️ Mode Demo: Fitur simpan hanya tersedia untuk pemilik SFR SEO Tool. "
-            "Silakan hubungi pemilik jika membutuhkan akses."
+            "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect("/analisis")
 
@@ -555,8 +558,8 @@ def edit_artikel(article_id):
 
     if DEMO_MODE:
         flash(
-            "⚠️ Mode Demo: Fitur edit hanya tersedia untuk pemilik SFR SEO Tool. "
-            "Silakan hubungi pemilik jika membutuhkan akses."
+            "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/artikel/{article_id}")
 
@@ -706,8 +709,8 @@ def analisis_ulang_artikel(article_id):
 
     if DEMO_MODE:
         flash(
-            "⚠️ Mode Demo: Fitur analisis ulang hanya tersedia untuk pemilik SFR SEO Tool. "
-            "Silakan hubungi pemilik jika membutuhkan akses."
+            "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/artikel/{article_id}")
 
@@ -755,8 +758,8 @@ def hapus_artikel(article_id):
 
     if DEMO_MODE:
         flash(
-            "⚠️ Mode Demo: Fitur hapus hanya tersedia untuk pemilik SFR SEO Tool. "
-            "Silakan hubungi pemilik jika membutuhkan akses."
+            "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/artikel/{article_id}")
 
@@ -785,8 +788,8 @@ def keyword_tracker():
 
     if DEMO_MODE and request.method == "POST":
         flash(
-            "⚠️ Mode Demo: Fitur tambah keyword hanya tersedia untuk pemilik SFR SEO Tool. "
-            "Silakan hubungi pemilik jika membutuhkan akses."
+            "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect("/keyword")
 
@@ -921,8 +924,8 @@ def edit_keyword(keyword_id):
 
     if DEMO_MODE:
         flash(
-            "⚠️ Mode Demo: Fitur edit keyword hanya tersedia untuk pemilik SFR SEO Tool. "
-            "Silakan hubungi pemilik jika membutuhkan akses."
+           "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/keyword/{keyword_id}")
 
@@ -1031,8 +1034,8 @@ def hapus_keyword(keyword_id):
 
     if DEMO_MODE:
         flash(
-            "⚠️ Mode Demo: Fitur hapus keyword hanya tersedia untuk pemilik SFR SEO Tool. "
-            "Silakan hubungi pemilik jika membutuhkan akses."
+           "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/keyword/{keyword_id}")
 
@@ -1057,6 +1060,190 @@ def hapus_keyword(keyword_id):
     conn.close()
 
     return redirect("/keyword")
+
+# =========================
+# SITEMAP CHECKER
+# =========================
+@app.route("/sitemap", methods=["GET", "POST"])
+def sitemap_checker():
+
+    sitemap_url = ""
+    article_url = ""
+
+    urls = []
+
+    status = None
+    error = None
+
+    total_urls = 0
+    article_found = False
+
+    # =========================
+    # PROSES FORM
+    # =========================
+    if request.method == "POST":
+
+        sitemap_url = request.form.get(
+            "sitemap_url",
+            ""
+        ).strip()
+
+        article_url = request.form.get(
+            "article_url",
+            ""
+        ).strip()
+
+        try:
+
+            # =========================
+            # VALIDASI URL
+            # =========================
+            parsed_url = urlparse(sitemap_url)
+
+            if parsed_url.scheme not in ("http", "https"):
+                raise ValueError(
+                    "URL sitemap harus menggunakan http atau https."
+                )
+
+            if not parsed_url.hostname:
+                raise ValueError(
+                    "URL sitemap tidak valid."
+                )
+
+            # =========================
+            # BLOK HOST LOKAL / PRIVATE
+            # =========================
+            hostname = parsed_url.hostname
+
+            ip_address = socket.gethostbyname(hostname)
+            ip = ipaddress.ip_address(ip_address)
+
+            if (
+                ip.is_private
+                or ip.is_loopback
+                or ip.is_link_local
+                or ip.is_reserved
+            ):
+                raise ValueError(
+                    "Alamat sitemap tidak diizinkan."
+                )
+
+            # =========================
+            # AMBIL XML SITEMAP
+            # =========================
+            request_sitemap = urllib.request.Request(
+                sitemap_url,
+                headers={
+                    "User-Agent": "SFR-SEO-Tool/1.0"
+                }
+            )
+
+            with urllib.request.urlopen(
+                request_sitemap,
+                timeout=10
+            ) as response:
+
+                xml_data = response.read(
+                    5 * 1024 * 1024
+                )
+
+            # =========================
+            # PARSE XML
+            # =========================
+            root = ET.fromstring(xml_data)
+
+            # Ambil semua elemen <loc>
+            for element in root.iter():
+
+                if element.tag.endswith("loc"):
+
+                    if element.text:
+
+                        url = element.text.strip()
+
+                        if url:
+                            urls.append(url)
+
+            # Hilangkan URL duplikat
+            urls = list(dict.fromkeys(urls))
+
+            total_urls = len(urls)
+
+            # =========================
+            # CEK URL ARTIKEL
+            # =========================
+            if article_url:
+
+                normalized_article = (
+                    article_url
+                    .strip()
+                    .rstrip("/")
+                )
+
+                normalized_urls = [
+                    url.rstrip("/")
+                    for url in urls
+                ]
+
+                article_found = (
+                    normalized_article
+                    in normalized_urls
+                )
+
+            status = "success"
+
+        except urllib.error.HTTPError as e:
+
+            error = (
+                f"Sitemap tidak dapat diakses. "
+                f"HTTP Error {e.code}."
+            )
+
+        except urllib.error.URLError:
+
+            error = (
+                "Sitemap tidak dapat diakses. "
+                "Periksa kembali URL sitemap."
+            )
+
+        except ET.ParseError:
+
+            error = (
+                "File yang ditemukan bukan sitemap XML "
+                "yang valid."
+            )
+
+        except socket.gaierror:
+
+            error = (
+                "Domain sitemap tidak dapat ditemukan."
+            )
+
+        except ValueError as e:
+
+            error = str(e)
+
+        except Exception as e:
+
+            print("Sitemap Error:", e)
+
+            error = (
+                "Terjadi kesalahan saat membaca sitemap."
+            )
+
+    # =========================
+    # TAMPILKAN HALAMAN
+    # =========================
+    return render_template(
+        "sitemap.html",
+        sitemap_url=sitemap_url,
+        article_url=article_url,
+        urls=urls,
+        total_urls=total_urls,
+        article_found=article_found,
+        status=status,
+        error=error
+    )
 
 # =========================
 # GOOGLE SEARCH CONSOLE

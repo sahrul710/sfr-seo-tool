@@ -20,15 +20,15 @@
       <nav>
         <a href="/">🏠 Dashboard</a>
 
-        <a href="/keyword" class="active">🎯 Keyword Tracker</a>
+        <a href="/keyword" class="active"> 🎯 Keyword Tracker </a>
 
-        <a href="/analisis">🔍 Analisis SEO</a>
+        <a href="/analisis"> 🔍 Analisis SEO </a>
 
-        <a href="/artikel">📝 Artikel Saya</a>
+        <a href="/artikel"> 📝 Artikel Saya </a>
 
-        <a href="/sitemap">🗺️ Sitemap</a>
+        <a href="/sitemap"> 🗺️ Sitemap </a>
 
-        <a href="/search-console">📊 Search Console</a>
+        <a href="/search-console"> 📊 Search Console </a>
       </nav>
     </div>
 
@@ -47,13 +47,15 @@
         <div class="profile">S</div>
       </div>
 
-      <!-- PESAN MODE DEMO -->
+      <!-- PESAN FLASH -->
       {% with messages = get_flashed_messages() %} {% if messages %} {% for
       message in messages %}
       <div class="demo-alert">{{ message }}</div>
       {% endfor %} {% endif %} {% endwith %}
 
-      <!-- DETAIL KEYWORD -->
+      <!-- =========================
+           DETAIL KEYWORD
+      ========================== -->
       <section class="main-card">
         <!-- ACTION -->
         <div class="detail-actions">
@@ -127,6 +129,7 @@
           <a
             href="{{ keyword['target_url'] }}"
             target="_blank"
+            rel="noopener noreferrer"
             class="text-link"
           >
             {{ keyword["target_url"] }}
@@ -141,7 +144,9 @@
         <p class="detail-text">{{ keyword["notes"] or "-" }}</p>
       </section>
 
-      <!-- ARTIKEL TERHUBUNG -->
+      <!-- =========================
+           ARTIKEL TERHUBUNG
+      ========================== -->
       <section class="main-card linked-articles-section">
         <div class="card-header">
           <div>

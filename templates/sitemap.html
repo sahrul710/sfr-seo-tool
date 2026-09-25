@@ -12,7 +12,7 @@
     />
   </head>
 
-  <body>
+  <body class="sitemap-page">
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="logo">SFR <span>SEO Tool</span></div>
@@ -33,13 +33,20 @@
     </div>
 
     <!-- CONTENT -->
-    <div class="content">
-      <h1>Sitemap Checker</h1>
+    <main class="content">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Sitemap Checker</h1>
 
-      <p>
-        Periksa sitemap website dan cek apakah URL artikel sudah tercantum di
-        dalam sitemap.
-      </p>
+          <p>
+            Periksa sitemap website dan cek apakah URL artikel sudah tercantum
+            di dalam sitemap.
+          </p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
 
       <!-- FORM -->
       <section class="main-card">
@@ -86,18 +93,20 @@
       <section class="main-card" style="margin-top: 25px">
         <h2>Hasil Sitemap</h2>
 
-        <p>
+        <p style="margin-top: 12px">
           Total URL ditemukan:
           <strong>{{ total_urls }}</strong>
         </p>
 
         {% if article_url %} {% if article_found %}
 
-        <p style="font-weight: bold">✅ URL artikel ditemukan di sitemap.</p>
+        <p style="margin-top: 12px; font-weight: bold">
+          ✅ URL artikel ditemukan di sitemap.
+        </p>
 
         {% else %}
 
-        <p style="font-weight: bold">
+        <p style="margin-top: 12px; font-weight: bold">
           ❌ URL artikel belum ditemukan di sitemap.
         </p>
 
@@ -110,8 +119,8 @@
 
         {% if urls %}
 
-        <div style="overflow-x: auto">
-          <table class="article-table">
+        <div class="article-table" style="margin-top: 20px">
+          <table>
             <thead>
               <tr>
                 <th>No</th>
@@ -126,7 +135,12 @@
                 <td>{{ loop.index }}</td>
 
                 <td>
-                  <a href="{{ url }}" target="_blank" rel="noopener noreferrer">
+                  <a
+                    href="{{ url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="public-link"
+                  >
                     {{ url }}
                   </a>
                 </td>
@@ -139,12 +153,12 @@
 
         {% else %}
 
-        <p>Tidak ada URL yang ditemukan.</p>
+        <p style="margin-top: 15px">Tidak ada URL yang ditemukan.</p>
 
         {% endif %}
       </section>
 
       {% endif %}
-    </div>
+    </main>
   </body>
 </html>

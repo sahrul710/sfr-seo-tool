@@ -45,35 +45,36 @@
         <div class="profile">S</div>
       </div>
 
-      <!-- PESAN MODE DEMO -->
+      <!-- PESAN FLASH -->
       {% with messages = get_flashed_messages() %} {% if messages %} {% for
       message in messages %}
       <div class="demo-alert">{{ message }}</div>
       {% endfor %} {% endif %} {% endwith %}
 
+      <!-- =========================
+           MODE DEMO / PUBLIK
+      ========================== -->
+      {% if demo_mode %}
+
+      <section class="main-card demo-article-detail">
+        <a href="/artikel" class="text-link"> ← Kembali ke Artikel Saya </a>
+
+        <h2 class="demo-article-title">{{ article["title"] }}</h2>
+
+        <div class="demo-alert">
+          ⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. Akses penuh hanya
+          tersedia untuk Sahrul FR selaku pengembang
+        </div>
+      </section>
+
+      <!-- =========================
+           MODE PRIBADI
+      ========================== -->
+      {% else %}
+
       <section class="main-card">
-       <!-- ACTION -->
-{% if not demo_mode %}
-
-<div class="detail-actions">
-
-  <!-- tombol Edit Artikel -->
-
-  <!-- tombol Analisis Ulang -->
-
-  <!-- tombol Hapus Artikel -->
-
-</div>
-
-{% else %}
-
-<div class="demo-alert">
-  ⚠️ Mode Demo: Fitur edit, hapus, dan analisis ulang hanya tersedia
-  untuk pemilik SFR SEO Tool. Silakan hubungi pemilik jika membutuhkan
-  akses.
-</div>
-
-{% endif %}
+        <!-- ACTION -->
+        <div class="detail-actions">
           <a href="/artikel" class="text-link"> ← Kembali ke Artikel Saya </a>
 
           <a href="/artikel/{{ article['id'] }}/edit" class="edit-button">
@@ -174,6 +175,8 @@
 
         <div class="article-content">{{ article["article"] }}</div>
       </section>
+
+      {% endif %}
     </main>
   </body>
 </html>

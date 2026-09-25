@@ -49,6 +49,32 @@
       <section class="main-card">
         {% if articles %}
 
+        <!-- =========================
+             MODE DEMO / PUBLIK
+        ========================== -->
+        {% if demo_mode %}
+
+        <div class="demo-article-list">
+          {% for article in articles %}
+
+          <div class="demo-article-card">
+            <div class="demo-article-content">
+              <h3>{{ article["title"] }}</h3>
+
+              <a href="/artikel/{{ article['id'] }}" class="edit-button">
+                Lihat Artikel
+              </a>
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+
+        <!-- =========================
+             MODE PRIBADI
+        ========================== -->
+        {% else %}
+
         <div class="article-table">
           <table>
             <thead>
@@ -144,7 +170,7 @@
           </table>
         </div>
 
-        {% else %}
+        {% endif %} {% else %}
 
         <!-- EMPTY STATE -->
         <div class="empty-chart">

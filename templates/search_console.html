@@ -28,27 +28,18 @@
 
         <a href="/sitemap">🗺️ Sitemap</a>
 
-        <a href="/search-console" class="active">📊 Search Console</a>
+        <a href="/search-console" class="active"> 📊 Search Console </a>
       </nav>
     </div>
 
-  <!-- CONTENT -->
-<main class="content">
-
-  <!-- HEADER -->
-  <div class="header">
-    <div>
-      <h1>Google Search Console</h1>
-    </div>
-  </div>
-
-  {% if demo_mode %}
-  <div class="demo-alert">
-    ⚠️ Mode Demo: Data Google Search Console pribadi disembunyikan pada
-    versi publik. Fitur ini tetap digunakan pada versi pribadi pemilik
-    SFR SEO Tool.
-  </div>
-  {% endif %}
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- =========================
+           HEADER
+      ========================== -->
+      <div class="header">
+        <div>
+          <h1>Google Search Console</h1>
 
           <p>Pantau performa website berdasarkan data Google Search Console.</p>
         </div>
@@ -56,7 +47,22 @@
         <div class="profile">S</div>
       </div>
 
-      <!-- ERROR MESSAGE -->
+      <!-- =========================
+           MODE DEMO
+      ========================== -->
+      {% if demo_mode %}
+
+      <div class="demo-alert">
+        ⚠️ Mode Demo: Data Google Search Console pribadi disembunyikan pada
+        versi publik. Akses penuh hanya tersedia untuk Sahrul FR selaku
+        pengembang.
+      </div>
+
+      {% endif %}
+
+      <!-- =========================
+           ERROR MESSAGE
+      ========================== -->
       {% if error %}
 
       <section
@@ -70,7 +76,9 @@
 
       {% endif %}
 
-      <!-- WEBSITE -->
+      <!-- =========================
+           WEBSITE TERHUBUNG
+      ========================== -->
       <section class="main-card" style="margin-bottom: 25px">
         <div class="card-header">
           <div>
@@ -95,7 +103,9 @@
         </div>
       </section>
 
-      <!-- STATISTIK -->
+      <!-- =========================
+           STATISTIK
+      ========================== -->
       <div class="stats">
         <div class="card">
           <p>Clicks</p>
@@ -122,7 +132,9 @@
         </div>
       </div>
 
-      <!-- QUERY PENCARIAN -->
+      <!-- =========================
+           QUERY PENCARIAN
+      ========================== -->
       <section class="main-card" style="margin-bottom: 25px">
         <div class="card-header">
           <div>
@@ -181,7 +193,9 @@
         {% endif %}
       </section>
 
-      <!-- HALAMAN TERATAS -->
+      <!-- =========================
+           HALAMAN TERATAS
+      ========================== -->
       <section class="main-card" style="margin-bottom: 25px">
         <div class="card-header">
           <div>
@@ -213,7 +227,12 @@
 
               <tr>
                 <td>
-                  <a href="{{ item.page }}" target="_blank" class="public-link">
+                  <a
+                    href="{{ item.page }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="public-link"
+                  >
                     {{ item.page }}
                   </a>
                 </td>
@@ -248,7 +267,9 @@
         {% endif %}
       </section>
 
-      <!-- PENJELASAN -->
+      <!-- =========================
+           RINGKASAN PERFORMA
+      ========================== -->
       <section class="main-card">
         <div class="card-header">
           <div>
