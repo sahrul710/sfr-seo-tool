@@ -19,12 +19,16 @@
 
       <nav>
         <a href="/">🏠 Dashboard</a>
-        <a href="/analisis">🔍 Analisis SEO</a>
-        <a href="/artikel">📝 Artikel Saya</a>
+
         <a href="/keyword" class="active">🎯 Keyword Tracker</a>
-        <a href="/search-console"> 📊 Search Console </a>
-        <a href="/sitemap"> 🗺️ Sitemap </a>
-        <a>⚙️ Pengaturan</a>
+
+        <a href="/analisis">🔍 Analisis SEO</a>
+
+        <a href="/artikel">📝 Artikel Saya</a>
+
+        <a href="/sitemap">🗺️ Sitemap</a>
+
+        <a href="/search-console">📊 Search Console</a>
       </nav>
     </div>
 
@@ -43,6 +47,12 @@
         <div class="profile">S</div>
       </div>
 
+      <!-- PESAN MODE DEMO -->
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for
+      message in messages %}
+      <div class="demo-alert">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
       <!-- DETAIL KEYWORD -->
       <section class="main-card">
         <!-- ACTION -->
@@ -50,6 +60,8 @@
           <a href="/keyword" class="text-link">
             ← Kembali ke Keyword Tracker
           </a>
+
+          {% if not demo_mode %}
 
           <a href="/keyword/{{ keyword['id'] }}/edit" class="edit-button">
             ✏️ Edit Keyword
@@ -64,6 +76,8 @@
               🗑️ Hapus Keyword
             </button>
           </form>
+
+          {% endif %}
         </div>
 
         <!-- KEYWORD -->

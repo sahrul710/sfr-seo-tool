@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import urllib.request
 import urllib.parse
@@ -5,7 +6,8 @@ import xml.etree.ElementTree as ET
 import socket
 import ipaddress
 
-from flask import Flask, render_template, request, redirect
+
+from flask import Flask, render_template, request, redirect, flash
 
 from database import init_db
 
@@ -17,6 +19,25 @@ from search_console import (
 
 
 app = Flask(__name__)
+
+app.secret_key = "sfr-seo-tool-demo"
+
+# =========================
+# MODE APLIKASI
+# =========================
+DEMO_MODE = os.environ.get(
+    "DEMO_MODE",
+    "false"
+).lower() == "true"
+
+# =========================
+# KIRIM MODE KE TEMPLATE
+# =========================
+@app.context_processor
+def inject_demo_mode():
+    return {
+        "demo_mode": DEMO_MODE
+    }
 
 
 # =========================
@@ -356,6 +377,19 @@ def analisis():
 @app.route("/simpan", methods=["POST"])
 def simpan_artikel():
 
+    # =========================
+    # MODE DEMO
+    # =========================
+    if DEMO_MODE:
+        flash(
+            "⚠️ Mode Demo: Fitur simpan hanya tersedia untuk pemilik SFR SEO Tool. "
+            "Silakan hubungi pemilik jika membutuhkan akses."
+        )
+        return redirect("/analisis")
+
+    # =========================
+    # AMBIL DATA FORM
+    # =========================
     keyword_id_raw = request.form.get(
         "keyword_id",
         ""
@@ -381,7 +415,6 @@ def simpan_artikel():
         ""
     ).strip()
 
-
     # =========================
     # KEYWORD ID
     # =========================
@@ -389,7 +422,6 @@ def simpan_artikel():
         keyword_id = int(keyword_id_raw)
     else:
         keyword_id = None
-
 
     # =========================
     # HITUNG ON-PAGE SEO SCORE
@@ -401,14 +433,12 @@ def simpan_artikel():
         article
     )
 
-
+    # =========================
+    # SIMPAN KE DATABASE
+    # =========================
     conn = get_db_connection()
     cursor = conn.cursor()
 
-
-    # =========================
-    # SIMPAN ARTIKEL
-    # =========================
     cursor.execute("""
         INSERT INTO articles (
             keyword,
@@ -432,12 +462,10 @@ def simpan_artikel():
         "Belum Terindeks"
     ))
 
-
     # =========================
     # UPDATE KEYWORD TRACKER
     # =========================
     if keyword_id is not None:
-
         cursor.execute("""
             UPDATE keywords
             SET
@@ -453,10 +481,11 @@ def simpan_artikel():
             keyword_id
         ))
 
-
+    # =========================
+    # SIMPAN SEMUA PERUBAHAN
+    # =========================
     conn.commit()
     conn.close()
-
 
     return redirect("/artikel")
 
@@ -521,15 +550,18 @@ def detail_artikel(article_id):
     )
 
 
-# =========================
-# EDIT ARTIKEL
-# =========================
 @app.route("/artikel/<int:article_id>/edit", methods=["GET", "POST"])
 def edit_artikel(article_id):
 
+    if DEMO_MODE:
+        flash(
+            "⚠️ Mode Demo: Fitur edit hanya tersedia untuk pemilik SFR SEO Tool. "
+            "Silakan hubungi pemilik jika membutuhkan akses."
+        )
+        return redirect(f"/artikel/{article_id}")
+
     conn = get_db_connection()
     cursor = conn.cursor()
-
 
     # =========================
     # AMBIL DATA ARTIKEL
@@ -665,11 +697,20 @@ def edit_artikel(article_id):
         "edit_artikel.html",
         article=article
     )
+
 # =========================
 # ANALISIS ULANG SEO
 # =========================
 @app.route("/artikel/<int:article_id>/analisis-ulang", methods=["POST"])
 def analisis_ulang_artikel(article_id):
+
+    if DEMO_MODE:
+        flash(
+            "⚠️ Mode Demo: Fitur analisis ulang hanya tersedia untuk pemilik SFR SEO Tool. "
+            "Silakan hubungi pemilik jika membutuhkan akses."
+        )
+        return redirect(f"/artikel/{article_id}")
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -706,12 +747,19 @@ def analisis_ulang_artikel(article_id):
 
     return redirect(f"/artikel/{article_id}")
 
-
 # =========================
 # HAPUS ARTIKEL
 # =========================
 @app.route("/artikel/<int:article_id>/hapus", methods=["POST"])
 def hapus_artikel(article_id):
+
+    if DEMO_MODE:
+        flash(
+            "⚠️ Mode Demo: Fitur hapus hanya tersedia untuk pemilik SFR SEO Tool. "
+            "Silakan hubungi pemilik jika membutuhkan akses."
+        )
+        return redirect(f"/artikel/{article_id}")
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -725,7 +773,6 @@ def hapus_artikel(article_id):
 
     return redirect("/artikel")
 
-
 # =========================
 # JALANKAN APLIKASI
 # =========================
@@ -736,9 +783,15 @@ def hapus_artikel(article_id):
 @app.route("/keyword", methods=["GET", "POST"])
 def keyword_tracker():
 
+    if DEMO_MODE and request.method == "POST":
+        flash(
+            "⚠️ Mode Demo: Fitur tambah keyword hanya tersedia untuk pemilik SFR SEO Tool. "
+            "Silakan hubungi pemilik jika membutuhkan akses."
+        )
+        return redirect("/keyword")
+
     conn = get_db_connection()
     cursor = conn.cursor()
-
     # =========================
     # SIMPAN KEYWORD
     # =========================
@@ -866,6 +919,13 @@ def detail_keyword(keyword_id):
 @app.route("/keyword/<int:keyword_id>/edit", methods=["GET", "POST"])
 def edit_keyword(keyword_id):
 
+    if DEMO_MODE:
+        flash(
+            "⚠️ Mode Demo: Fitur edit keyword hanya tersedia untuk pemilik SFR SEO Tool. "
+            "Silakan hubungi pemilik jika membutuhkan akses."
+        )
+        return redirect(f"/keyword/{keyword_id}")
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -969,6 +1029,13 @@ def edit_keyword(keyword_id):
 @app.route("/keyword/<int:keyword_id>/hapus", methods=["POST"])
 def hapus_keyword(keyword_id):
 
+    if DEMO_MODE:
+        flash(
+            "⚠️ Mode Demo: Fitur hapus keyword hanya tersedia untuk pemilik SFR SEO Tool. "
+            "Silakan hubungi pemilik jika membutuhkan akses."
+        )
+        return redirect(f"/keyword/{keyword_id}")
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -997,6 +1064,37 @@ def hapus_keyword(keyword_id):
 @app.route("/search-console")
 def search_console():
 
+    # =========================
+    # MODE DEMO
+    # =========================
+    if DEMO_MODE:
+
+        data = {
+            "site_url": "https://sfrcreativeid.blogspot.com/",
+            "start_date": "-",
+            "end_date": "-",
+            "clicks": 0,
+            "impressions": 0,
+            "ctr": 0,
+            "position": 0
+        }
+
+        queries = []
+        pages = []
+
+        error = None
+
+        return render_template(
+            "search_console.html",
+            data=data,
+            queries=queries,
+            pages=pages,
+            error=error
+        )
+
+    # =========================
+    # MODE PRIBADI
+    # =========================
     try:
         data = get_search_console_summary()
         queries = get_top_queries()
@@ -1031,164 +1129,6 @@ def search_console():
         error=error
     )
 
-# =========================
-# SITEMAP
-# =========================
-@app.route("/sitemap", methods=["GET", "POST"])
-def sitemap():
-
-    sitemap_url = ""
-    article_url = ""
-
-    status = None
-    total_urls = 0
-    article_found = None
-    urls = []
-    error = None
-
-    if request.method == "POST":
-
-        sitemap_url = request.form.get(
-            "sitemap_url",
-            ""
-        ).strip()
-
-        article_url = request.form.get(
-            "article_url",
-            ""
-        ).strip()
-
-        try:
-
-            # =========================
-            # VALIDASI URL
-            # =========================
-            parsed_url = urllib.parse.urlparse(
-                sitemap_url
-            )
-
-            if parsed_url.scheme not in ["http", "https"]:
-                raise ValueError(
-                    "URL sitemap harus menggunakan http atau https."
-                )
-
-            if not parsed_url.hostname:
-                raise ValueError(
-                    "URL sitemap tidak valid."
-                )
-
-
-            # =========================
-            # CEGAH AKSES KE IP INTERNAL
-            # =========================
-            ip_address = socket.gethostbyname(
-                parsed_url.hostname
-            )
-
-            ip = ipaddress.ip_address(
-                ip_address
-            )
-
-            if (
-                ip.is_private
-                or ip.is_loopback
-                or ip.is_link_local
-                or ip.is_reserved
-                or ip.is_multicast
-            ):
-                raise ValueError(
-                    "Alamat sitemap tidak diizinkan."
-                )
-
-
-            # =========================
-            # AMBIL DATA SITEMAP
-            # =========================
-            request_sitemap = urllib.request.Request(
-                sitemap_url,
-                headers={
-                    "User-Agent": "SFR-SEO-Tool/1.0"
-                }
-            )
-
-            with urllib.request.urlopen(
-                request_sitemap,
-                timeout=10
-            ) as response:
-
-                sitemap_data = response.read()
-
-
-            # =========================
-            # BACA XML
-            # =========================
-            root = ET.fromstring(
-                sitemap_data
-            )
-
-
-            # =========================
-            # AMBIL SEMUA URL
-            # =========================
-            for element in root.iter():
-
-                if element.tag.endswith("loc"):
-
-                    if element.text:
-
-                        url = element.text.strip()
-
-                        if url:
-                            urls.append(url)
-
-
-            # Hapus URL duplikat
-            urls = list(
-                dict.fromkeys(urls)
-            )
-
-            total_urls = len(urls)
-
-            status = "success"
-
-
-            # =========================
-            # CEK URL ARTIKEL
-            # =========================
-            if article_url:
-
-                article_normal = article_url.rstrip("/")
-
-                article_found = any(
-                    url.rstrip("/") == article_normal
-                    for url in urls
-                )
-
-
-        except Exception as e:
-
-            print(
-                "Sitemap Error:",
-                e
-            )
-
-            error = (
-                "Sitemap tidak dapat dibaca. "
-                "Pastikan URL sitemap benar, "
-                "publik, dan menggunakan format XML."
-            )
-
-
-    return render_template(
-        "sitemap.html",
-        sitemap_url=sitemap_url,
-        article_url=article_url,
-        status=status,
-        total_urls=total_urls,
-        article_found=article_found,
-        urls=urls,
-        error=error
-    )
 
 if __name__ == "__main__":
     app.run(debug=True)

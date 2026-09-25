@@ -19,12 +19,16 @@
 
       <nav>
         <a href="/">🏠 Dashboard</a>
-        <a href="/analisis">🔍 Analisis SEO</a>
-        <a href="/artikel" class="active">📝 Artikel Saya</a>
+
         <a href="/keyword">🎯 Keyword Tracker</a>
-        <a href="/search-console"> 📊 Search Console </a>
-        <a href="/sitemap"> 🗺️ Sitemap </a>
-        <a>⚙️ Pengaturan</a>
+
+        <a href="/analisis">🔍 Analisis SEO</a>
+
+        <a href="/artikel" class="active">📝 Artikel Saya</a>
+
+        <a href="/sitemap">🗺️ Sitemap</a>
+
+        <a href="/search-console">📊 Search Console</a>
       </nav>
     </div>
 
@@ -41,9 +45,35 @@
         <div class="profile">S</div>
       </div>
 
+      <!-- PESAN MODE DEMO -->
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for
+      message in messages %}
+      <div class="demo-alert">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
       <section class="main-card">
-        <!-- ACTION -->
-        <div class="detail-actions">
+       <!-- ACTION -->
+{% if not demo_mode %}
+
+<div class="detail-actions">
+
+  <!-- tombol Edit Artikel -->
+
+  <!-- tombol Analisis Ulang -->
+
+  <!-- tombol Hapus Artikel -->
+
+</div>
+
+{% else %}
+
+<div class="demo-alert">
+  ⚠️ Mode Demo: Fitur edit, hapus, dan analisis ulang hanya tersedia
+  untuk pemilik SFR SEO Tool. Silakan hubungi pemilik jika membutuhkan
+  akses.
+</div>
+
+{% endif %}
           <a href="/artikel" class="text-link"> ← Kembali ke Artikel Saya </a>
 
           <a href="/artikel/{{ article['id'] }}/edit" class="edit-button">

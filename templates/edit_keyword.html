@@ -1,277 +1,276 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Edit Keyword - SFR SEO Tool</title>
 
     <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}"
-    >
-</head>
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
 
-<body>
-
+  <body>
     <!-- SIDEBAR -->
     <div class="sidebar">
+      <div class="logo">SFR <span>SEO Tool</span></div>
 
-        <div class="logo">
-            SFR <span>SEO Tool</span>
-        </div>
+      <nav>
+        <a href="/">🏠 Dashboard</a>
 
-        <nav>
-            <a href="/">🏠 Dashboard</a>
-            <a href="/analisis">🔍 Analisis SEO</a>
-            <a href="/artikel">📝 Artikel Saya</a>
-            <a href="/keyword" class="active">🎯 Keyword Tracker</a>
-            <a href="/search-console"> 📊 Search Console </a>
-            <a href="/sitemap"> 🗺️ Sitemap </a>
-            <a>⚙️ Pengaturan</a>
-        </nav>
+        <a href="/keyword" class="active">🎯 Keyword Tracker</a>
 
+        <a href="/analisis">🔍 Analisis SEO</a>
+
+        <a href="/artikel">📝 Artikel Saya</a>
+
+        <a href="/sitemap">🗺️ Sitemap</a>
+
+        <a href="/search-console">📊 Search Console</a>
+      </nav>
     </div>
-
 
     <!-- CONTENT -->
     <main class="content">
-
-        <div class="header">
-
-            <div>
-                <h1>Edit Keyword</h1>
-                <p>Perbarui data keyword dan progres konten SEO.</p>
-            </div>
-
-            <div class="profile">
-                S
-            </div>
-
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Edit Keyword</h1>
+          <p>Perbarui data keyword dan progres konten SEO.</p>
         </div>
 
+        <div class="profile">S</div>
+      </div>
 
-        <section class="main-card">
+      <!-- PESAN FLASH -->
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="demo-alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
 
-            <form method="POST">
+      {% if not demo_mode %}
 
-                <!-- KEYWORD -->
-                <div class="form-group">
-                    <label>Keyword</label>
+      <!-- FORM EDIT KEYWORD -->
+      <section class="main-card">
+        <form method="POST">
+          <!-- KEYWORD -->
+          <div class="form-group">
+            <label>Keyword</label>
 
-                    <input
-                        type="text"
-                        name="keyword"
-                        value="{{ keyword['keyword'] or '' }}"
-                        required
-                    >
-                </div>
+            <input
+              type="text"
+              name="keyword"
+              value="{{ keyword['keyword'] or '' }}"
+              required
+            />
+          </div>
 
+          <!-- SEARCH INTENT -->
+          <div class="form-group">
+            <label>Search Intent</label>
 
-                <!-- SEARCH INTENT -->
-                <div class="form-group">
-                    <label>Search Intent</label>
+            <select name="intent">
+              <option
+                value="Informational"
+                {% if keyword["intent"] == "Informational" %}selected{% endif %}
+              >
+                Informational
+              </option>
 
-                    <select name="intent">
+              <option
+                value="Commercial Investigation"
+                {% if keyword["intent"] == "Commercial Investigation" %}selected{% endif %}
+              >
+                Commercial Investigation
+              </option>
 
-                        <option
-                            value="Informational"
-                            {% if keyword['intent'] == 'Informational' %}selected{% endif %}
-                        >
-                            Informational
-                        </option>
+              <option
+                value="Transactional"
+                {% if keyword["intent"] == "Transactional" %}selected{% endif %}
+              >
+                Transactional
+              </option>
 
-                        <option
-                            value="Commercial Investigation"
-                            {% if keyword['intent'] == 'Commercial Investigation' %}selected{% endif %}
-                        >
-                            Commercial Investigation
-                        </option>
+              <option
+                value="Navigational"
+                {% if keyword["intent"] == "Navigational" %}selected{% endif %}
+              >
+                Navigational
+              </option>
+            </select>
+          </div>
 
-                        <option
-                            value="Transactional"
-                            {% if keyword['intent'] == 'Transactional' %}selected{% endif %}
-                        >
-                            Transactional
-                        </option>
+          <!-- SUMBER RISET -->
+          <div class="form-group">
+            <label>Sumber Riset</label>
 
-                        <option
-                            value="Navigational"
-                            {% if keyword['intent'] == 'Navigational' %}selected{% endif %}
-                        >
-                            Navigational
-                        </option>
+            <select name="source">
+              <option
+                value="Google Trends"
+                {% if keyword["source"] == "Google Trends" %}selected{% endif %}
+              >
+                Google Trends
+              </option>
 
-                    </select>
-                </div>
+              <option
+                value="Google Autocomplete"
+                {% if keyword["source"] == "Google Autocomplete" %}selected{% endif %}
+              >
+                Google Autocomplete
+              </option>
 
+              <option
+                value="Ahrefs"
+                {% if keyword["source"] == "Ahrefs" %}selected{% endif %}
+              >
+                Ahrefs
+              </option>
 
-                <!-- SOURCE -->
-                <div class="form-group">
-                    <label>Sumber Riset</label>
+              <option
+                value="Google Search Console"
+                {% if keyword["source"] == "Google Search Console" %}selected{% endif %}
+              >
+                Google Search Console
+              </option>
 
-                    <select name="source">
+              <option
+                value="Manual"
+                {% if keyword["source"] == "Manual" %}selected{% endif %}
+              >
+                Manual
+              </option>
+            </select>
+          </div>
 
-                        <option
-                            value="Google Trends"
-                            {% if keyword['source'] == 'Google Trends' %}selected{% endif %}
-                        >
-                            Google Trends
-                        </option>
+          <!-- STATUS -->
+          <div class="form-group">
+            <label>Status Konten</label>
 
-                        <option
-                            value="Google Autocomplete"
-                            {% if keyword['source'] == 'Google Autocomplete' %}selected{% endif %}
-                        >
-                            Google Autocomplete
-                        </option>
+            <select name="status">
+              <option
+                value="Riset"
+                {% if keyword["status"] == "Riset" %}selected{% endif %}
+              >
+                Riset
+              </option>
 
-                        <option
-                            value="Ahrefs"
-                            {% if keyword['source'] == 'Ahrefs' %}selected{% endif %}
-                        >
-                            Ahrefs
-                        </option>
+              <option
+                value="Draft"
+                {% if keyword["status"] == "Draft" %}selected{% endif %}
+              >
+                Draft
+              </option>
 
-                        <option
-                            value="Google Search Console"
-                            {% if keyword['source'] == 'Google Search Console' %}selected{% endif %}
-                        >
-                            Google Search Console
-                        </option>
+              <option
+                value="Siap Publish"
+                {% if keyword["status"] == "Siap Publish" %}selected{% endif %}
+              >
+                Siap Publish
+              </option>
 
-                        <option
-                            value="Manual"
-                            {% if keyword['source'] == 'Manual' %}selected{% endif %}
-                        >
-                            Manual
-                        </option>
+              <option
+                value="Published"
+                {% if keyword["status"] == "Published" %}selected{% endif %}
+              >
+                Published
+              </option>
+            </select>
+          </div>
 
-                    </select>
-                </div>
+          <!-- TARGET ARTIKEL -->
+          <div class="form-group">
+            <label>Target Artikel</label>
 
+            <input
+              type="text"
+              name="target_article"
+              value="{{ keyword['target_article'] or '' }}"
+              placeholder="Judul artikel target"
+            />
+          </div>
 
-                <!-- STATUS -->
-                <div class="form-group">
-                    <label>Status Konten</label>
+          <!-- TARGET URL -->
+          <div class="form-group">
+            <label>Target URL</label>
 
-                    <select name="status">
+            <input
+              type="text"
+              name="target_url"
+              value="{{ keyword['target_url'] or '' }}"
+              placeholder="https://website.com/artikel"
+            />
+          </div>
 
-                        <option
-                            value="Riset"
-                            {% if keyword['status'] == 'Riset' %}selected{% endif %}
-                        >
-                            Riset
-                        </option>
+          <!-- STATUS INDEX -->
+          <div class="form-group">
+            <label>Status Index</label>
 
-                        <option
-                            value="Draft"
-                            {% if keyword['status'] == 'Draft' %}selected{% endif %}
-                        >
-                            Draft
-                        </option>
+            <select name="index_status">
+              <option
+                value="Belum Terindeks"
+                {% if keyword["index_status"] == "Belum Terindeks" %}selected{% endif %}
+              >
+                Belum Terindeks
+              </option>
 
-                        <option
-                            value="Siap Publish"
-                            {% if keyword['status'] == 'Siap Publish' %}selected{% endif %}
-                        >
-                            Siap Publish
-                        </option>
+              <option
+                value="Indexed"
+                {% if keyword["index_status"] == "Indexed" %}selected{% endif %}
+              >
+                Indexed
+              </option>
+            </select>
+          </div>
 
-                        <option
-                            value="Published"
-                            {% if keyword['status'] == 'Published' %}selected{% endif %}
-                        >
-                            Published
-                        </option>
+          <!-- CATATAN -->
+          <div class="form-group">
+            <label>Catatan</label>
 
-                    </select>
-                </div>
+            <textarea
+              name="notes"
+              rows="5"
+              placeholder="Catatan riset keyword..."
+            >{{ keyword['notes'] or '' }}</textarea>
+          </div>
 
+          <!-- ACTION -->
+          <div class="edit-actions">
+            <button type="submit">
+              💾 Simpan Perubahan
+            </button>
 
-                <!-- TARGET ARTICLE -->
-                <div class="form-group">
-                    <label>Target Artikel</label>
+            <a
+              href="/keyword/{{ keyword['id'] }}"
+              class="text-link"
+            >
+              Batal
+            </a>
+          </div>
+        </form>
+      </section>
 
-                    <input
-                        type="text"
-                        name="target_article"
-                        value="{{ keyword['target_article'] or '' }}"
-                        placeholder="Judul artikel target"
-                    >
-                </div>
+      {% else %}
 
+      <div class="demo-alert">
+        ⚠️ Mode Demo: Fitur edit keyword hanya tersedia untuk pemilik
+        SFR SEO Tool. Silakan hubungi pemilik jika membutuhkan akses.
+      </div>
 
-                <!-- TARGET URL -->
-                <div class="form-group">
-                    <label>Target URL</label>
+      <a
+        href="/keyword/{{ keyword['id'] }}"
+        class="text-link"
+      >
+        ← Kembali ke Detail Keyword
+      </a>
 
-                    <input
-                        type="text"
-                        name="target_url"
-                        value="{{ keyword['target_url'] or '' }}"
-                        placeholder="https://website.com/artikel"
-                    >
-                </div>
-
-
-                <!-- INDEX STATUS -->
-                <div class="form-group">
-                    <label>Status Index</label>
-
-                    <select name="index_status">
-
-                        <option
-                            value="Belum Terindeks"
-                            {% if keyword['index_status'] == 'Belum Terindeks' %}selected{% endif %}
-                        >
-                            Belum Terindeks
-                        </option>
-
-                        <option
-                            value="Indexed"
-                            {% if keyword['index_status'] == 'Indexed' %}selected{% endif %}
-                        >
-                            Indexed
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <!-- NOTES -->
-                <div class="form-group">
-                    <label>Catatan</label>
-
-                    <textarea
-                        name="notes"
-                        rows="5"
-                        placeholder="Catatan riset keyword..."
-                    >{{ keyword['notes'] or '' }}</textarea>
-                </div>
-
-
-                <!-- ACTION -->
-                <div class="edit-actions">
-
-                    <button type="submit">
-                        💾 Simpan Perubahan
-                    </button>
-
-                    <a
-                        href="/keyword/{{ keyword['id'] }}"
-                        class="text-link"
-                    >
-                        Batal
-                    </a>
-
-                </div>
-
-            </form>
-
-        </section>
-
+      {% endif %}
     </main>
-
-</body>
+  </body>
 </html>

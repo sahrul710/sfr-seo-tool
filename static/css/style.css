@@ -860,8 +860,8 @@ button:hover {
   }
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
+/* TABLET + MOBILE */
+@media (max-width: 900px) {
   body {
     overflow-x: hidden;
   }
@@ -872,34 +872,53 @@ button:hover {
 
     position: relative;
 
-    padding: 18px 14px;
+    padding: 18px 16px 22px;
   }
 
   .logo {
-    margin-bottom: 18px;
     text-align: center;
+
+    font-size: 22px;
+
+    margin-bottom: 22px;
   }
 
   .sidebar nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
 
     gap: 8px;
+
+    width: 100%;
   }
 
   .sidebar nav a {
-    padding: 9px 11px;
+    width: 100%;
 
-    font-size: 12px;
+    display: flex;
+    align-items: center;
+
+    min-height: 46px;
+
+    padding: 11px 14px;
+
+    font-size: 14px;
+
+    text-align: left;
+
+    border-radius: 8px;
 
     white-space: nowrap;
+  }
+
+  .sidebar nav a.active {
+    background: #214769;
   }
 
   .content {
     margin-left: 0;
 
-    padding: 18px;
+    padding: 20px;
   }
 
   .header {
@@ -989,6 +1008,7 @@ button:hover {
 
   .article-table {
     width: 100%;
+
     overflow-x: auto;
 
     -webkit-overflow-scrolling: touch;
@@ -1012,36 +1032,33 @@ button:hover {
 
   .empty-chart {
     min-height: 220px;
+
     padding: 22px;
   }
 }
 
-/* HP KECIL */
-@media (max-width: 480px) {
+/* MOBILE */
+@media (max-width: 600px) {
   .content {
-    padding: 14px;
+    padding: 16px;
   }
 
   .sidebar {
-    padding: 15px 10px;
+    padding: 16px 12px 20px;
   }
 
   .logo {
-    font-size: 19px;
-  }
+    font-size: 21px;
 
-  .sidebar nav {
-    justify-content: flex-start;
+    margin-bottom: 18px;
   }
 
   .sidebar nav a {
-    width: calc(50% - 4px);
+    min-height: 44px;
 
-    text-align: center;
+    padding: 10px 12px;
 
-    padding: 10px 6px;
-
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .header h1 {
@@ -1050,6 +1067,7 @@ button:hover {
 
   .header p {
     font-size: 13px;
+
     line-height: 1.5;
   }
 
@@ -1068,12 +1086,27 @@ button:hover {
     font-size: 19px;
   }
 
-  .article-table table {
-    min-width: 650px;
-  }
-
   .detail-text,
   .article-content {
     font-size: 14px;
+  }
+
+  .article-title-link,
+  .dashboard-table a {
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: normal;
+
+    line-height: 1.4;
+
+    max-width: 220px;
   }
 }

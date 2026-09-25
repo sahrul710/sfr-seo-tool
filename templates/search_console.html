@@ -18,28 +18,37 @@
       <div class="logo">SFR <span>SEO Tool</span></div>
 
       <nav>
-        <a href="/"> 🏠 Dashboard </a>
+        <a href="/">🏠 Dashboard</a>
 
-        <a href="/analisis"> 🔍 Analisis SEO </a>
+        <a href="/keyword">🎯 Keyword Tracker</a>
 
-        <a href="/artikel"> 📝 Artikel Saya </a>
+        <a href="/analisis">🔍 Analisis SEO</a>
 
-        <a href="/keyword"> 🎯 Keyword Tracker </a>
-
-        <a href="/search-console" class="active"> 📊 Search Console </a>
+        <a href="/artikel">📝 Artikel Saya</a>
 
         <a href="/sitemap">🗺️ Sitemap</a>
 
-        <a> ⚙️ Pengaturan </a>
+        <a href="/search-console" class="active">📊 Search Console</a>
       </nav>
     </div>
 
-    <!-- CONTENT -->
-    <main class="content">
-      <!-- HEADER -->
-      <div class="header">
-        <div>
-          <h1>Google Search Console</h1>
+  <!-- CONTENT -->
+<main class="content">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>Google Search Console</h1>
+    </div>
+  </div>
+
+  {% if demo_mode %}
+  <div class="demo-alert">
+    ⚠️ Mode Demo: Data Google Search Console pribadi disembunyikan pada
+    versi publik. Fitur ini tetap digunakan pada versi pribadi pemilik
+    SFR SEO Tool.
+  </div>
+  {% endif %}
 
           <p>Pantau performa website berdasarkan data Google Search Console.</p>
         </div>

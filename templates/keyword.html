@@ -18,19 +18,17 @@
       <div class="logo">SFR <span>SEO Tool</span></div>
 
       <nav>
-        <a href="/"> 🏠 Dashboard </a>
+        <a href="/">🏠 Dashboard</a>
 
-        <a href="/analisis"> 🔍 Analisis SEO </a>
+        <a href="/keyword" class="active">🎯 Keyword Tracker</a>
 
-        <a href="/artikel"> 📝 Artikel Saya </a>
+        <a href="/analisis">🔍 Analisis SEO</a>
 
-        <a href="/keyword" class="active"> 🎯 Keyword Tracker </a>
+        <a href="/artikel">📝 Artikel Saya</a>
 
-        <a href="/search-console"> 📊 Search Console </a>
+        <a href="/sitemap">🗺️ Sitemap</a>
 
-        <a href="/sitemap"> 🗺️ Sitemap </a>
-
-        <a> ⚙️ Pengaturan </a>
+        <a href="/search-console">📊 Search Console</a>
       </nav>
     </div>
 
@@ -49,7 +47,18 @@
         <div class="profile">S</div>
       </div>
 
-      <!-- FORM TAMBAH KEYWORD -->
+      <!-- PESAN FLASH -->
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for
+      message in messages %}
+      <div class="demo-alert">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- =========================
+           FORM TAMBAH KEYWORD
+      ========================== -->
+
+      {% if not demo_mode %}
+
       <section class="main-card">
         <div class="card-header">
           <div>
@@ -62,7 +71,7 @@
         <form method="POST" class="keyword-form">
           <!-- KEYWORD -->
           <div class="form-group">
-            <label> Keyword </label>
+            <label>Keyword</label>
 
             <input
               type="text"
@@ -74,7 +83,7 @@
 
           <!-- SEARCH INTENT -->
           <div class="form-group">
-            <label> Search Intent </label>
+            <label>Search Intent</label>
 
             <select name="intent">
               <option value="Informational">Informational</option>
@@ -91,7 +100,7 @@
 
           <!-- SUMBER RISET -->
           <div class="form-group">
-            <label> Sumber Riset </label>
+            <label>Sumber Riset</label>
 
             <select name="source">
               <option value="Google Trends">Google Trends</option>
@@ -110,7 +119,7 @@
 
           <!-- STATUS -->
           <div class="form-group">
-            <label> Status </label>
+            <label>Status</label>
 
             <select name="status">
               <option value="Riset">Riset</option>
@@ -127,7 +136,7 @@
 
           <!-- TARGET ARTIKEL -->
           <div class="form-group">
-            <label> Target Artikel </label>
+            <label>Target Artikel</label>
 
             <input
               type="text"
@@ -138,7 +147,7 @@
 
           <!-- TARGET URL -->
           <div class="form-group">
-            <label> Target URL </label>
+            <label>Target URL</label>
 
             <input
               type="text"
@@ -149,7 +158,7 @@
 
           <!-- INDEX STATUS -->
           <div class="form-group">
-            <label> Status Index </label>
+            <label>Status Index</label>
 
             <select name="index_status">
               <option value="Belum Terindeks">Belum Terindeks</option>
@@ -160,7 +169,7 @@
 
           <!-- CATATAN -->
           <div class="form-group">
-            <label> Catatan </label>
+            <label>Catatan</label>
 
             <textarea
               name="notes"
@@ -173,7 +182,19 @@
         </form>
       </section>
 
-      <!-- DAFTAR KEYWORD -->
+      {% else %}
+
+      <div class="demo-alert">
+        ⚠️ Mode Demo: Penambahan keyword hanya tersedia untuk pemilik SFR SEO
+        Tool. Silakan hubungi pemilik jika membutuhkan akses.
+      </div>
+
+      {% endif %}
+
+      <!-- =========================
+           DAFTAR KEYWORD
+      ========================== -->
+
       <section class="main-card keyword-list-section">
         <div class="card-header">
           <div>
