@@ -10,7 +10,7 @@ import ipaddress
 
 
 
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, session
 
 from database import init_db
 
@@ -23,7 +23,10 @@ from search_console import (
 
 app = Flask(__name__)
 
-app.secret_key = "sfr-seo-tool-demo"
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "sfr-seo-tool-local-dev"
+)
 
 # =========================
 # MODE APLIKASI
@@ -34,14 +37,101 @@ DEMO_MODE = os.environ.get(
 ).lower() == "true"
 
 # =========================
-# KIRIM MODE KE TEMPLATE
+# OWNER SESSION
+# =========================
+def is_owner():
+    return session.get(
+        "is_owner",
+        False
+    ) is True
+
+# =========================
+# STATUS AKSES
+# =========================
+def is_demo_mode():
+    return DEMO_MODE and not is_owner()
+
+
+# =========================
+# KIRIM STATUS KE TEMPLATE
 # =========================
 @app.context_processor
-def inject_demo_mode():
+def inject_access_status():
     return {
-        "demo_mode": DEMO_MODE
+        "demo_mode": is_demo_mode(),
+        "owner_logged_in": is_owner()
     }
 
+# =========================
+# OWNER LOGIN
+# =========================
+@app.route("/owner-login", methods=["GET", "POST"])
+def owner_login():
+
+    # Kalau sudah login, langsung ke dashboard
+    if is_owner():
+        return redirect("/")
+
+    if request.method == "POST":
+
+        username = request.form.get(
+            "username",
+            ""
+        ).strip()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+        owner_username = os.environ.get(
+            "OWNER_USERNAME",
+            ""
+        )
+
+        owner_password = os.environ.get(
+            "OWNER_PASSWORD",
+            ""
+        )
+
+        if (
+            username == owner_username
+            and password == owner_password
+            and owner_username
+            and owner_password
+        ):
+            session.clear()
+
+            session["is_owner"] = True
+
+            flash(
+                "✅ Login owner berhasil."
+            )
+
+            return redirect("/")
+
+        flash(
+            "❌ Username atau password salah."
+        )
+
+    return render_template(
+        "owner_login.html"
+    )
+
+
+# =========================
+# OWNER LOGOUT
+# =========================
+@app.route("/owner-logout")
+def owner_logout():
+
+    session.clear()
+
+    flash(
+        "✅ Kamu sudah logout dari mode owner."
+    )
+
+    return redirect("/")
 
 # =========================
 # SIAPKAN DATABASE
@@ -380,13 +470,10 @@ def analisis():
 @app.route("/simpan", methods=["POST"])
 def simpan_artikel():
 
-    # =========================
-    # MODE DEMO
-    # =========================
-    if DEMO_MODE:
+    if is_demo_mode():
         flash(
             "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
-    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
+            "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect("/analisis")
 
@@ -556,10 +643,10 @@ def detail_artikel(article_id):
 @app.route("/artikel/<int:article_id>/edit", methods=["GET", "POST"])
 def edit_artikel(article_id):
 
-    if DEMO_MODE:
+    if is_demo_mode():
         flash(
             "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
-    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
+            "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/artikel/{article_id}")
 
@@ -707,12 +794,15 @@ def edit_artikel(article_id):
 @app.route("/artikel/<int:article_id>/analisis-ulang", methods=["POST"])
 def analisis_ulang_artikel(article_id):
 
-    if DEMO_MODE:
+    if is_demo_mode():
         flash(
             "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
-    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
+            "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/artikel/{article_id}")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -756,10 +846,10 @@ def analisis_ulang_artikel(article_id):
 @app.route("/artikel/<int:article_id>/hapus", methods=["POST"])
 def hapus_artikel(article_id):
 
-    if DEMO_MODE:
+    if is_demo_mode():
         flash(
             "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
-    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
+            "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/artikel/{article_id}")
 
@@ -786,10 +876,10 @@ def hapus_artikel(article_id):
 @app.route("/keyword", methods=["GET", "POST"])
 def keyword_tracker():
 
-    if DEMO_MODE and request.method == "POST":
+    if is_demo_mode() and request.method == "POST":
         flash(
             "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
-    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
+            "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect("/keyword")
 
@@ -922,10 +1012,10 @@ def detail_keyword(keyword_id):
 @app.route("/keyword/<int:keyword_id>/edit", methods=["GET", "POST"])
 def edit_keyword(keyword_id):
 
-    if DEMO_MODE:
+    if is_demo_mode():
         flash(
-           "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
-    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
+            "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+            "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/keyword/{keyword_id}")
 
@@ -1032,10 +1122,10 @@ def edit_keyword(keyword_id):
 @app.route("/keyword/<int:keyword_id>/hapus", methods=["POST"])
 def hapus_keyword(keyword_id):
 
-    if DEMO_MODE:
+    if is_demo_mode():
         flash(
-           "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
-    "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
+            "⚠️ Mode Demo: Fitur ini dibatasi pada versi publik. "
+            "Akses penuh hanya tersedia untuk Sahrul FR selaku pengembang."
         )
         return redirect(f"/keyword/{keyword_id}")
 
@@ -1254,7 +1344,7 @@ def search_console():
     # =========================
     # MODE DEMO
     # =========================
-    if DEMO_MODE:
+    if is_demo_mode():
 
         data = {
             "site_url": "https://sfrcreativeid.blogspot.com/",

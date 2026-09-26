@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Owner Login - SFR SEO Tool</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <main class="owner-login-page">
+      <section class="owner-login-card">
+        <div class="owner-login-header">
+          <div class="logo">SFR <span>SEO Tool</span></div>
+
+          <h1>Owner Login</h1>
+
+          <p>Masuk untuk mengakses fitur penuh SFR SEO Tool.</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for
+        message in messages %}
+        <div class="demo-alert">{{ message }}</div>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <form method="POST" class="owner-login-form">
+          <div class="form-group">
+            <label for="username">Username</label>
+
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Masukkan username owner"
+              autocomplete="username"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Masukkan password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <button type="submit">🔐 Login Owner</button>
+        </form>
+
+        <div class="owner-login-back">
+          <a href="/" class="text-link"> ← Kembali ke website </a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
